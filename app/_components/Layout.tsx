@@ -41,14 +41,22 @@ interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
 
+const StyledIconButton = styled(IconButton)({
+  borderRadius: '10px',
+  margin: '10px',
+});
+
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
+  backgroundColor: '#322C2B',
+  marginLeft: drawerWidth,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
+  boxShadow: 'none', // This line removes the shadow
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
@@ -119,15 +127,13 @@ export default function Layout({ children }: LayoutProps) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
-              Home
-            </Typography>
+
             <SessionProvider>
               <AccountInfo />
             </SessionProvider>
             <IconButton color='inherit'>
               <Badge badgeContent={4} color='secondary'>
-                <NotificationsIcon />
+                <NotificationsIcon style={{ color: '#322C2B' }} />
               </Badge>
             </IconButton>
           </Toolbar>
@@ -143,7 +149,7 @@ export default function Layout({ children }: LayoutProps) {
               </Grid>
               <Grid item xs={6} style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <IconButton onClick={toggleDrawer} style={{ width: '40px', height: '40px' }}>
-                  <ChevronLeftIcon />
+                  <ChevronLeftIcon style={{ color: '#322C2B' }} />
                 </IconButton>
               </Grid>
             </Grid>
