@@ -48,7 +48,7 @@ model User {
   // next-auth のドキュメントでは email をオプショナルにしているが、必須に変更している
   // name か email どちらかがセットされていれば良い仕様の場合は元に戻す
   // reference: https://next-auth.js.org/adapters/prisma
-  email         String   @unique
+  email         String    @unique
   emailVerified DateTime?
   image         String?
   // 入社日、入学日、会員になった日
@@ -58,13 +58,13 @@ model User {
   accounts      Account[]
   sessions      Session[]
 
-  password   String
-  roleId    String
-  role    Role     @relation(fields: [roleId], references: [id])
+  password        String
+  roleId          String
+  role            Role         @relation(fields: [roleId], references: [id])
   fromThanksCards ThanksCard[] @relation("FromThanksCards")
-  toThanksCards ThanksCard[] @relation("ToThanksCards")
-  departmentId String
-  department Department     @relation(fields: [departmentId], references: [id])
+  toThanksCards   ThanksCard[] @relation("ToThanksCards")
+  departmentId    String
+  department      Department   @relation(fields: [departmentId], references: [id])
 }
 
 model VerificationRequest {
@@ -79,46 +79,46 @@ model VerificationRequest {
 }
 
 model Role {
-  id            String    @id @default(cuid())
-  name      String    @unique
+  id    String @id @default(cuid())
+  name  String @unique
   users User[]
 }
 
 model ThanksCard {
-  id            String    @id @default(cuid())
-  title      String
+  id        String   @id @default(cuid())
+  title     String
   body      String
-  from    User     @relation("FromThanksCards", fields: [fromId], references: [id])
-  fromId  String
-  to    User     @relation("ToThanksCards", fields: [toId], references: [id])
-  toId  String
+  from      User     @relation("FromThanksCards", fields: [fromId], references: [id])
+  fromId    String
+  to        User     @relation("ToThanksCards", fields: [toId], references: [id])
+  toId      String
   createdAt DateTime @default(now())
 }
 
 model Department {
-  id            String    @id @default(cuid())
-  code      Int   @unique
-  name      String
-  parentId  String?
-  parent    Department?     @relation("Parent Children", fields: [parentId], references: [id])
-  children Department[]     @relation("Parent Children")
-  users User[]
+  id       String       @id @default(cuid())
+  code     Int          @unique
+  name     String
+  parentId String?
+  parent   Department?  @relation("Parent Children", fields: [parentId], references: [id])
+  children Department[] @relation("Parent Children")
+  users    User[]
 }
 
 model Header {
-  id            String    @id @default(cuid())
-  header_attr1  String
-  header_attr2  String
-  header_attr3  String
-  header_attr4  String
-  items Item[]
+  id           String @id @default(cuid())
+  header_attr1 String
+  header_attr2 String
+  header_attr3 String
+  header_attr4 String
+  items        Item[]
 }
 
 model Item {
-  id          String    @id @default(cuid())
+  id          String  @id @default(cuid())
   items_attr1 String?
   items_attr2 String?
   headerId    String
   // Header が削除されたときに、紐づく Item も削除するために onDelete: Cascade を指定している。
-  header  Header  @relation(fields: [headerId], references: [id], onDelete: Cascade)
+  header      Header  @relation(fields: [headerId], references: [id], onDelete: Cascade)
 }

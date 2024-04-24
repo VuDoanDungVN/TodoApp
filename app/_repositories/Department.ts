@@ -8,7 +8,11 @@ export type Department = Exclude<
 
 export namespace DepartmentRepository {
   export async function findMany() {
-    const users = await prisma.department.findMany();
+    const users = await prisma.department.findMany({
+      include: {
+        users: true,
+      },
+    });
     return users;
   }
 

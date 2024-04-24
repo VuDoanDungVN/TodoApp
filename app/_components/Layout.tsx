@@ -10,42 +10,27 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
+import Image from 'next/image';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import 'dayjs/locale/ja';
 import { SessionProvider } from 'next-auth/react';
 import { mainMenu, secondaryMenu } from './Menu';
 import AccountInfo from './AccountInfo';
+import Footer from './footer';
 
-function Copyright(props: any) {
-  return (
-    <Typography variant='body2' color='text.secondary' align='center' {...props}>
-      {'Copyright © '}
-      <Link color='inherit' href='https://mui.com/'>
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+const cssMainComponent = { flexGrow: 1, overflow: 'auto' };
+// Width of the drawer
 const drawerWidth: number = 240;
-
+// Interface for AppBarProps
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
-
-const StyledIconButton = styled(IconButton)({
-  borderRadius: '10px',
-  margin: '10px',
-});
-
+// Styling for AppBar
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
@@ -66,7 +51,7 @@ const AppBar = styled(MuiAppBar, {
     }),
   }),
 }));
-
+// Styling for Drawer
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -80,7 +65,6 @@ const Drawer = styled(MuiDrawer, {
     }),
     boxSizing: 'border-box',
     ...(!open && {
-      overflowX: 'hidden',
       transition: theme.transitions.create('width', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
@@ -92,13 +76,15 @@ const Drawer = styled(MuiDrawer, {
     }),
   },
 }));
-
+// Creating MUI theme
 const mdTheme = createTheme({});
 
+// Type for LayoutProps
 type LayoutProps = Required<{
   readonly children: React.ReactNode;
 }>;
 
+// Layout component
 export default function Layout({ children }: LayoutProps) {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
@@ -109,12 +95,11 @@ export default function Layout({ children }: LayoutProps) {
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex', width: '100%' }}>
         <CssBaseline />
+
+        {/* AppBar */}
         <AppBar position='absolute' open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px',
-            }}
-          >
+          <Toolbar>
+            {/* Menu Icon */}
             <IconButton
               edge='start'
               color='inherit'
@@ -127,27 +112,23 @@ export default function Layout({ children }: LayoutProps) {
             >
               <MenuIcon />
             </IconButton>
-
+            {/* Account Info */}
             <SessionProvider>
               <AccountInfo />
             </SessionProvider>
-            <IconButton color='inherit'>
-              <Badge badgeContent={4} color='secondary'>
-                <NotificationsIcon style={{ color: '#322C2B' }} />
-              </Badge>
-            </IconButton>
           </Toolbar>
         </AppBar>
 
-        {/* Đây là nơi Navbar Menu */}
+        {/* Drawer */}
         <Drawer variant='permanent' open={open}>
           <Toolbar>
             <Grid container spacing={0}>
-              {/*Logo */}
+              {/* Logo */}
               <Grid item xs={6}>
-                <img src='/logo.png' alt='Logo' width={100} height={40} />
+                <Image src='/logo.png' alt='Logo' width={100} height={40} />
               </Grid>
               <Grid item xs={6} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                {/* Close Drawer Icon */}
                 <IconButton onClick={toggleDrawer} style={{ width: '40px', height: '40px' }}>
                   <ChevronLeftIcon style={{ color: '#322C2B' }} />
                 </IconButton>
@@ -155,13 +136,19 @@ export default function Layout({ children }: LayoutProps) {
             </Grid>
           </Toolbar>
           <Divider />
+          {/* Main Menu */}
           <List component='nav' style={{ height: '93vh' }}>
             {mainMenu}
             <Divider sx={{ my: 1 }} />
             {secondaryMenu}
           </List>
         </Drawer>
-        {/* Đây là nơi Navbar Menu kết thúc*/}
+
+        {/* Content */}
+        <Box component='main' sx={cssMainComponent}>
+          <Toolbar />
+          {children}
+        </Box>
       </Box>
     </ThemeProvider>
   );

@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import Link from 'next/link';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -5,24 +6,28 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import CameraIcon from '@mui/icons-material/Camera';
-import QrCodeScannerIcon from '@mui/icons-material/QrCodeScanner';
-import QrCode2Icon from '@mui/icons-material/QrCode2';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import Avatar from '@mui/material/Avatar';
+import Stack from '@mui/material/Stack';
 import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import LayersIcon from '@mui/icons-material/Layers';
+import Button from '@mui/material/Button';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import LineAxisIcon from '@mui/icons-material/LineAxis';
+import PersonIcon from '@mui/icons-material/Person';
+import IconButton from '@mui/material/IconButton';
+import { Typography } from '@mui/material';
+import { signIn, signOut } from 'next-auth/react';
 
 export const mainMenu = (
   <React.Fragment>
     <Link href='/' passHref>
       <ListItemButton>
         <ListItemIcon>
-          <DashboardIcon />
+          <Stack direction='row' spacing={2}>
+            <IconButton color='inherit' style={{ width: '30px', height: '30px' }}>
+              <Avatar alt='Vu dung' src='/images/img/user.jpg' />
+            </IconButton>
+          </Stack>
         </ListItemIcon>
-        <ListItemText primary='ThanksCard' />
+        <Typography>Vũ Nhật Minh</Typography>
       </ListItemButton>
     </Link>
     <Link href='/user' passHref>

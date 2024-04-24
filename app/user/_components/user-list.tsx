@@ -1,100 +1,54 @@
 'use client';
-
-import Link from 'next/link';
-
-/* ライブラリ Material-UI が提供するコンポーネントの import */
-import Button from '@mui/material/Button';
+import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-/* icons */
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import Paper from '@mui/material/Paper';
+import { User } from '@/app/_repositories/User';
+import { Department } from '@/app/_repositories/Department';
+import { Role } from '@/app/_repositories/Role';
 
-import { useRouter } from 'next/navigation';
-import { mutate } from 'swr';
-
-import type { UserWithRoleDepartment } from '@/app/_repositories/User';
-
-type Props = {
-  users: UserWithRoleDepartment[];
-};
-
-/*
-type User = Prisma.UserGetPayload<{
-  include: {
-    role: true;
-    department: true;
-  };
-}>;
 type Props = {
   users: User[];
+  departments: Department[] | null;
+  roles: Role[] | null;
 };
-*/
 
 export default function UserList(props: Props) {
-  const users = props.users;
-
-  const router = useRouter();
-
-  const onDelete = async (id: string) => {
-    const response = await fetch(`/api/user/${id}`, {
-      method: 'DELETE',
-    });
-    mutate('/api/user');
-    router.refresh();
-  };
-
+  const userList = props.users;
   return (
-    <>
-      <Link href='/user/create' passHref>
-        <Button variant='contained' color='primary'>
-          <PersonAddIcon /> Create User
-        </Button>
-      </Link>
-      <div>
-        <Table size='small'>
-          <TableHead>
-            <TableRow>
-              <TableCell>id</TableCell>
-              <TableCell>name</TableCell>
-              <TableCell>email</TableCell>
-              <TableCell>role</TableCell>
-              <TableCell>department</TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {/* users 全件をテーブル出力する */}
-            {users.map((user) => {
-              return (
-                /* 一覧系の更新箇所を特定するために一意となる key を設定する必要がある */
-                <TableRow key={user.id}>
-                  <TableCell>{user.id}</TableCell>
-                  <TableCell>{user.name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.role.name}</TableCell>
-                  <TableCell>{user.department.name}</TableCell>
-                  <TableCell>
-                    <Link href={`/user/edit/${user.id}`} passHref>
-                      <Button variant='contained' color='primary'>
-                        Edit
-                      </Button>
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={() => onDelete(user.id)} variant='contained' color='warning'>
-                      Delete
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </div>
-    </>
+    <TableContainer component={Paper}>
+      <Table aria-label='collapsible table'>
+        <TableHead>
+          <TableRow>
+            <TableCell />
+            <TableCell>ID</TableCell>
+            <TableCell align='right'>Tên</TableCell>
+            <TableCell align='right'>Email</TableCell>
+            <TableCell align='right'>Role</TableCell>
+            <TableCell align='right'>Department</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {userList?.map((user, index) => {
+            return (
+              <TableRow key={user.id}>
+                <TableCell>{++index}</TableCell>
+                <TableCell component='th' scope='row'>
+                  {user.id}
+                </TableCell>
+                <TableCell align='right'>{user.name}</TableCell>
+                <TableCell align='right'>{user.email}</TableCell>
+                <TableCell align='right'>{user.name}</TableCell>
+                <TableCell align='right'>{user.email}</TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
