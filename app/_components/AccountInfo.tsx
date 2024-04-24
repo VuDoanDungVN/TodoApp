@@ -31,13 +31,7 @@ const AccountInfo = () => {
   };
   return (
     <Box style={{ width: '100%' }}>
-      <Grid
-        container
-        spacing={1}
-        justifyContent='space-between'
-        alignItems='center'
-        sx={{ color: '#fff', width: '100%' }}
-      >
+      <Grid container spacing={1} justifyContent='space-between' alignItems='center'>
         <Grid item xs={7} sx={{ flex: '1' }}>
           <Breadcrumbs aria-label='breadcrumb' style={{ color: '#fff' }}>
             <Link underline='hover' color='white' href='/#'>
