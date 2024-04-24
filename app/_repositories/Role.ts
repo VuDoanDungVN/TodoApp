@@ -5,7 +5,11 @@ export type Role = Exclude<Prisma.PromiseReturnType<typeof RoleRepository.findUn
 
 export namespace RoleRepository {
   export async function findMany() {
-    const users = await prisma.role.findMany();
+    const users = await prisma.role.findMany({
+      include: {
+        users: true,
+      },
+    });
     return users;
   }
 
