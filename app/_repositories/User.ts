@@ -2,23 +2,26 @@ import { prisma } from '@/app/_utils/prismaSingleton';
 import type { Prisma } from '@prisma/client';
 import type { User as _User } from '@prisma/client';
 
+//Hàm này để lấy ra thông tin của user
 export type User = _User;
-
-export type UserWithRoleDepartment = Exclude<
-  Prisma.PromiseReturnType<typeof UserRepository.findUniqueWithRoleDepartment>,
+//Hàm này để lấy ra thông tin của user có thông tin cá nhân và địa chỉ đã được gộp vào
+export type UserWithPersonalAndAddress = Exclude<
+  Prisma.PromiseReturnType<typeof UserRepository.findUniqueWithPersonalAndAddress>,
   null
 >;
 
+//Hàm này để liệt kê dạng danh sách các tài khoản có các nội dung như trong include
 export namespace UserRepository {
   export async function findMany() {
     return await prisma.user.findMany({
       include: {
         role: true,
-        department: true,
+        PersonalInformation: true,
+        address: true,
       },
     });
   }
-
+  //Hàm này để lựa chọn chọn lọc theo id
   export async function findUnique(id: string) {
     return await prisma.user.findUnique({
       where: {
@@ -26,31 +29,28 @@ export namespace UserRepository {
       },
     });
   }
-
-  export async function findUniqueWithRoleDepartment(id: string) {
+  //Hàm này để lựa chọn chọn lọc theo id và include các thông tin cá nhân và địa chỉ
+  export async function findUniqueWithPersonalAndAddress(id: string) {
     return await prisma.user.findUnique({
       include: {
         role: true,
-        department: true,
+        PersonalInformation: true,
+        address: true,
       },
       where: {
         id: id,
       },
     });
   }
-
+  //Hàm này để tạo mới một tài khoản
   export async function create(user: User) {
     return await prisma.user.create({
       data: user,
     });
   }
 
-  /**
-   *  updatedAt を除外することで、prisma が自動的に updatedAt を更新するようにする。
-   *  where に updatedAt を含めることで、楽観的ロックを実現する。
-   */
+  //Hàm này để cập nhật thông tin của một tài khoản
   export async function update(id: string, user: User) {
-    // user を updatedAt と userWithoutUpdatedAt に分割する。
     const { updatedAt, ...userWithoutUpdatedAt } = user;
     return await prisma.user.update({
       where: {
@@ -62,7 +62,7 @@ export namespace UserRepository {
       },
     });
   }
-
+  //Hàm này để xóa một tài khoản
   export async function remove(id: string) {
     return await prisma.user.delete({
       where: {

@@ -1,20 +1,26 @@
+'use client';
 import { Box, Grid, Paper, Typography } from '@mui/material';
 import React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
-export default function profileMain() {
+import { UserWithPersonalAndAddress } from '@/app/_repositories/User';
+type Props = {
+  user: UserWithPersonalAndAddress[] | null;
+};
+
+export default function profileMain(props: Props) {
+  const userList = props.user;
   return (
-    <Box style={{ width: '100%' }}>
-      <Grid container xs={12} style={{ backgroundColor: '#fff' }}>
-        <Grid item xs={3} style={{ padding: '15px 0px' }}>
+    <Box style={{ maxHeight: '99vh' }}>
+      <Grid container xs={12} style={{ backgroundColor: '#fff', maxWidth: 'auto' }}>
+        <Grid item xs={3}>
           <Button
             variant='outlined'
             style={{
               width: '90%',
-              marginTop: '70px',
+              marginTop: '90px',
               margin: '10px',
               padding: '10px',
               border: '0.5px solid #f0f2f5',
@@ -31,49 +37,53 @@ export default function profileMain() {
           </Typography>
           <Paper elevation={0} style={{ margin: '10px 0px', border: '0.5px solid #f0f2f5' }}>
             <Stack direction='row'>
-              <Grid
-                container
-                xs={12}
-                spacing={2}
-                sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              >
+              {userList?.map((user) => (
                 <Grid
-                  item
-                  xs={2}
+                  container
+                  xs={12}
+                  spacing={2}
                   sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                  key={user.id}
                 >
-                  <Avatar
-                    style={{
-                      width: '100px',
-                      height: '100px',
-                      margin: '20px',
-                      boxShadow: '0 0 5px #ccc',
-                      border: '1px solid #f0f2f5',
-                    }}
-                    alt='Remy Sharp'
-                    src='/images/img/user.jpg'
-                  />
-                </Grid>
-                <Grid item xs={8}>
-                  <Typography style={{ fontSize: '1rem', color: '#325381', fontWeight: 600 }}>
-                    Vu Doan Dung
-                  </Typography>
-                  <Typography style={{ fontSize: '1rem', color: '#d4d4d4' }}>
-                    Product Designer
-                  </Typography>
-                  <Typography style={{ fontSize: '1rem', color: '#d4d4d4' }}>
-                    Los Angeles, Canifornia, USA
-                  </Typography>
-                </Grid>
-                <Grid item xs={2} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button
-                    variant='outlined'
-                    style={{ color: '#d4d4d4', border: '0.5px solid #d4d4d4' }}
+                  <Grid
+                    item
+                    xs={2}
+                    sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                   >
-                    <EditIcon /> Edit
-                  </Button>
+                    <Avatar
+                      style={{
+                        width: '100px',
+                        height: '100px',
+                        margin: '20px',
+                        boxShadow: '0 0 5px #ccc',
+                        border: '1px solid #f0f2f5',
+                      }}
+                      alt='Remy Sharp'
+                      src='/images/img/user.jpg'
+                    />
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Typography style={{ fontSize: '1rem', color: '#325381', fontWeight: 600 }}>
+                      {user.name}
+                    </Typography>
+                    <Typography style={{ fontSize: '1rem', color: '#d4d4d4' }}>
+                      {user.PersonalInformation?.bio}
+                    </Typography>
+                    <Typography style={{ fontSize: '1rem', color: '#d4d4d4' }}>
+                      {user.address?.address}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item xs={2} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button
+                      variant='outlined'
+                      style={{ color: '#d4d4d4', border: '0.5px solid #d4d4d4' }}
+                    >
+                      <EditIcon /> Edit
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
+              ))}
             </Stack>
           </Paper>
 
@@ -85,6 +95,8 @@ export default function profileMain() {
                   Personal information
                 </Typography>
               </Grid>
+              {/**Thông tin cá nhân */}
+
               <Grid
                 container
                 xs={12}
@@ -100,7 +112,7 @@ export default function profileMain() {
                     First Name
                   </Typography>
                   <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
-                    Vu
+                    {/* {userList.PersonalInformation?.firstName} */}
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
@@ -108,7 +120,7 @@ export default function profileMain() {
                     Last Name
                   </Typography>
                   <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#d4d4d4' }}>
-                    Doan Dung
+                    {/* {userList.PersonalInformation?.lastName} */}
                   </Typography>
                 </Grid>
                 <Grid item xs={4} style={{ display: 'flex', justifyContent: 'flex-end' }}>

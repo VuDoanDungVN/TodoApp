@@ -23,7 +23,7 @@ import { mainMenu, secondaryMenu } from './Menu';
 import AccountInfo from './AccountInfo';
 import Footer from './footer';
 
-const cssMainComponent = { flexGrow: 1, overflow: 'auto' };
+const cssMainComponent = { flexGrow: 1, overflow: 'hidden' };
 // Width of the drawer
 const drawerWidth: number = 240;
 // Interface for AppBarProps

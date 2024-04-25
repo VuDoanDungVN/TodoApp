@@ -1,5 +1,7 @@
 import React from 'react';
 import ProfileUser from '@/app/profile-user/_components/profile';
-export default function ProfileUserPage() {
-  return <ProfileUser />;
+import { UserRepository } from '../_repositories/User';
+export default async function ProfileUserPage() {
+  const user = await UserRepository.findMany();
+  return <ProfileUser user={user} />;
 }
