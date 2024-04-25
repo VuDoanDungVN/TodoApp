@@ -6,11 +6,13 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import { UserWithPersonalAndAddress } from '@/app/_repositories/User';
+import { useSession } from 'next-auth/react';
 type Props = {
   user: UserWithPersonalAndAddress[] | null;
 };
 
 export default function profileMain(props: Props) {
+  const { data: session } = useSession();
   const userList = props.user;
   return (
     <Box style={{ maxHeight: '99vh' }}>
@@ -20,8 +22,7 @@ export default function profileMain(props: Props) {
             variant='outlined'
             style={{
               width: '90%',
-              marginTop: '90px',
-              margin: '10px',
+              margin: '88px 10px 0px 10px',
               padding: '10px',
               border: '0.5px solid #f0f2f5',
               fontSize: '1rem',
@@ -37,53 +38,49 @@ export default function profileMain(props: Props) {
           </Typography>
           <Paper elevation={0} style={{ margin: '10px 0px', border: '0.5px solid #f0f2f5' }}>
             <Stack direction='row'>
-              {userList?.map((user) => (
+              <Grid
+                container
+                xs={12}
+                spacing={2}
+                sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+              >
                 <Grid
-                  container
-                  xs={12}
-                  spacing={2}
+                  item
+                  xs={2}
                   sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                  key={user.id}
                 >
-                  <Grid
-                    item
-                    xs={2}
-                    sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                  >
-                    <Avatar
-                      style={{
-                        width: '100px',
-                        height: '100px',
-                        margin: '20px',
-                        boxShadow: '0 0 5px #ccc',
-                        border: '1px solid #f0f2f5',
-                      }}
-                      alt='Remy Sharp'
-                      src='/images/img/user.jpg'
-                    />
-                  </Grid>
-                  <Grid item xs={8}>
-                    <Typography style={{ fontSize: '1rem', color: '#325381', fontWeight: 600 }}>
-                      {user.name}
-                    </Typography>
-                    <Typography style={{ fontSize: '1rem', color: '#d4d4d4' }}>
-                      {user.PersonalInformation?.bio}
-                    </Typography>
-                    <Typography style={{ fontSize: '1rem', color: '#d4d4d4' }}>
-                      {user.address?.address}
-                    </Typography>
-                  </Grid>
-
-                  <Grid item xs={2} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button
-                      variant='outlined'
-                      style={{ color: '#d4d4d4', border: '0.5px solid #d4d4d4' }}
-                    >
-                      <EditIcon /> Edit
-                    </Button>
-                  </Grid>
+                  <Avatar
+                    style={{
+                      width: '100px',
+                      height: '100px',
+                      margin: '20px',
+                      boxShadow: '0 0 5px #ccc',
+                      border: '1px solid #f0f2f5',
+                    }}
+                    alt='Remy Sharp'
+                    src='/images/img/user.jpg'
+                  />
                 </Grid>
-              ))}
+                <Grid item xs={8}>
+                  <Typography style={{ fontSize: '1rem', color: '#325381', fontWeight: 600 }}>
+                    {session && session.user.name}
+                  </Typography>
+                  <Typography style={{ fontSize: '1rem', color: '#d4d4d4' }}>
+                    {session && session.user.email}
+                  </Typography>
+                  <Typography style={{ fontSize: '1rem', color: '#d4d4d4' }}>
+                    {session && session.user.refreshToken}
+                  </Typography>
+                </Grid>
+                <Grid item xs={2} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <Button
+                    variant='outlined'
+                    style={{ color: '#d4d4d4', border: '0.5px solid #d4d4d4' }}
+                  >
+                    <EditIcon /> Edit
+                  </Button>
+                </Grid>
+              </Grid>
             </Stack>
           </Paper>
 
@@ -106,13 +103,14 @@ export default function profileMain(props: Props) {
                   alignItems: 'center',
                   padding: '15px',
                 }}
+                key={session?.user.id}
               >
                 <Grid item xs={4}>
                   <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
                     First Name
                   </Typography>
                   <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
-                    {/* {userList.PersonalInformation?.firstName} */}
+                    {session && session.user.name}
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
@@ -120,7 +118,7 @@ export default function profileMain(props: Props) {
                     Last Name
                   </Typography>
                   <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#d4d4d4' }}>
-                    {/* {userList.PersonalInformation?.lastName} */}
+                    {session && session.user.name}
                   </Typography>
                 </Grid>
                 <Grid item xs={4} style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -132,6 +130,7 @@ export default function profileMain(props: Props) {
                   </Button>
                 </Grid>
               </Grid>
+
               <Grid
                 container
                 xs={12}
@@ -147,7 +146,7 @@ export default function profileMain(props: Props) {
                     Email address
                   </Typography>
                   <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
-                    vudungit92@gmail.com
+                    {session && session.user.email}
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
@@ -155,7 +154,7 @@ export default function profileMain(props: Props) {
                     Phone
                   </Typography>
                   <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#d4d4d4' }}>
-                    (+84)-123-456-789
+                    {userList && userList[0].PersonalInformation?.phoneNumber}
                   </Typography>
                 </Grid>
                 <Grid item xs={4} style={{ display: 'flex', justifyContent: 'flex-end' }}></Grid>
@@ -175,7 +174,7 @@ export default function profileMain(props: Props) {
                     Bio
                   </Typography>
                   <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
-                    Product Designer
+                    {userList && userList[0].PersonalInformation?.bio}
                   </Typography>
                 </Grid>
               </Grid>

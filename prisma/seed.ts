@@ -3,94 +3,107 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding database...');
-
-  // Seed roles
-  const adminRole = await prisma.role.create({
+  // Tạo các roles
+  const roleAdmin = await prisma.role.create({
     data: {
-      name: 'Admin',
+      name: 'admin',
     },
   });
 
-  const userRole = await prisma.role.create({
+  const roleUser = await prisma.role.create({
     data: {
-      name: 'User',
+      name: 'user',
     },
   });
 
-  // Seed users
-  const adminUser = await prisma.user.create({
+  // Tạo các users
+  const user1 = await prisma.user.create({
     data: {
-      name: 'Admin User',
-      email: 'admin@example.com',
-      password: 'admin',
-      roleId: adminRole.id,
+      name: 'John Doe',
+      email: 'john@example.com',
+      password: 'password123',
+      roleId: roleAdmin.id,
     },
   });
 
-  const regularUser = await prisma.user.create({
+  const user2 = await prisma.user.create({
     data: {
-      name: 'Regular User',
-      email: 'user@example.com',
-      password: 'user',
-      roleId: userRole.id,
+      name: 'Jane Doe',
+      email: 'jane@example.com',
+      password: 'password456',
+      roleId: roleUser.id,
     },
   });
 
-  // Seed personal information
-  await prisma.personalInformation.create({
+  // Tạo các accounts
+  await prisma.account.createMany({
+    data: [
+      {
+        userId: user1.id,
+        providerType: 'email',
+        providerId: 'john@example.com',
+        providerAccountId: 'john123',
+      },
+      {
+        userId: user2.id,
+        providerType: 'email',
+        providerId: 'jane@example.com',
+        providerAccountId: 'jane456',
+      },
+    ],
+  });
+
+  // Tạo các sessions
+  await prisma.session.createMany({
+    data: [
+      {
+        userId: user1.id,
+        expires: new Date(),
+        sessionToken: 'sessionToken1',
+        accessToken: 'accessToken1',
+      },
+      {
+        userId: user2.id,
+        expires: new Date(),
+        sessionToken: 'sessionToken2',
+        accessToken: 'accessToken2',
+      },
+    ],
+  });
+
+  // Tạo các thông tin cá nhân
+  const personalInfo1 = await prisma.personalInformation.create({
     data: {
-      userId: adminUser.id,
-      firstName: 'Admin',
-      lastName: 'User',
+      userId: user1.id,
       phoneNumber: '123456789',
-      bio: 'Admin bio',
+      bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     },
   });
 
-  await prisma.personalInformation.create({
+  const personalInfo2 = await prisma.personalInformation.create({
     data: {
-      userId: regularUser.id,
-      firstName: 'Regular',
-      lastName: 'User',
+      userId: user2.id,
       phoneNumber: '987654321',
-      bio: 'Regular user bio',
+      bio: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     },
   });
 
-  // Seed addresses
-  await prisma.address.create({
+  // Tạo địa chỉ
+  const address1 = await prisma.address.create({
     data: {
-      userId: adminUser.id,
-      address: 'Admin Address 123',
+      userId: user1.id,
+      address: '123 Main St, City',
     },
   });
 
-  await prisma.address.create({
+  const address2 = await prisma.address.create({
     data: {
-      userId: regularUser.id,
-      address: 'Regular Address 456',
+      userId: user2.id,
+      address: '456 Elm St, Town',
     },
   });
 
-  // Seed verification requests
-  await prisma.verificationRequest.create({
-    data: {
-      identifier: adminUser.email,
-      token: 'adminVerificationToken',
-      expires: new Date(),
-    },
-  });
-
-  await prisma.verificationRequest.create({
-    data: {
-      identifier: regularUser.email,
-      token: 'userVerificationToken',
-      expires: new Date(),
-    },
-  });
-
-  console.log('Database seeded successfully.');
+  console.log('Seed data generated successfully!');
 }
 
 main()

@@ -79,7 +79,11 @@ const AccountInfo = () => {
             <Menu id='basic-menu' anchorEl={anchorEl} open={open} onClose={handleClose}>
               <MenuItem onClick={handleClose}>Profile</MenuItem>
               <MenuItem onClick={handleClose}>My account</MenuItem>
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Button onClick={() => signOut()} variant='contained' color='secondary'>
+                  Logout
+                </Button>
+              </MenuItem>
             </Menu>
           </Stack>
           <IconButton color='inherit'>
