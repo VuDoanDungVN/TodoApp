@@ -43,28 +43,28 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  // next-auth のドキュメントでは email をオプショナルにしているが、必須に変更している
-  // name か email どちらかがセットされていれば良い仕様の場合は元に戻す
-  // reference: https://next-auth.js.org/adapters/prisma
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  // 入社日、入学日、会員になった日
-  joinningDate  DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
-
+  id              String       @id @default(cuid())
+  name            String?
+  fistName        String?
+  lastName        String?
+  email           String       @unique
+  emailVerified   DateTime?
+  image           String?
+  bio             String?
+  phoneNumber     String?
+  joinningDate    DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
   password        String
   roleId          String
+  departmentId    String
+  accounts        Account[]
+  sessions        Session[]
   role            Role         @relation(fields: [roleId], references: [id])
   fromThanksCards ThanksCard[] @relation("FromThanksCards")
   toThanksCards   ThanksCard[] @relation("ToThanksCards")
-  departmentId    String
-  department      Department   @relation(fields: [departmentId], references: [id])
+
+  department Department @relation(fields: [departmentId], references: [id])
 }
 
 model VerificationRequest {
