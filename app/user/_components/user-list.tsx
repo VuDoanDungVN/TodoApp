@@ -8,13 +8,15 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { User } from '@/app/_repositories/User';
-import { Department } from '@/app/_repositories/Department';
 import { Role } from '@/app/_repositories/Role';
+import { PersonalInformation } from '@/app/_repositories/PersonalInformation';
+import { Address } from '@/app/_repositories/Address';
 
 type Props = {
   users: User[];
-  departments: Department[] | null;
+  personalInformation: PersonalInformation[];
   roles: Role[] | null;
+  addresss: Address[];
 };
 
 export default function UserList(props: Props) {
