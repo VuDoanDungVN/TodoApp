@@ -6,17 +6,19 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import { UserWithPersonalAndAddress } from '@/app/_repositories/User';
-import { useSession } from 'next-auth/react';
+import { useSession, signIn, signOut } from 'next-auth/react';
+
 type Props = {
   user: UserWithPersonalAndAddress[] | null;
 };
 
-export default function profileMain(props: Props) {
-  const { data: session } = useSession();
+export default function ProfileMain(props: Props) {
+  const { data: session, status } = useSession();
   const userList = props.user;
+
   return (
-    <Box style={{ maxHeight: '99vh' }}>
-      <Grid container xs={12} style={{ backgroundColor: '#fff', maxWidth: 'auto' }}>
+    <Box style={{ height: 'auto' }}>
+      <Grid container xs={12} style={{ maxWidth: 'auto' }}>
         <Grid item xs={3}>
           <Button
             variant='outlined'
@@ -36,7 +38,14 @@ export default function profileMain(props: Props) {
           <Typography style={{ padding: '15px 0px', fontSize: '1.5rem', color: '#325381' }}>
             My profile
           </Typography>
-          <Paper elevation={0} style={{ margin: '10px 0px', border: '0.5px solid #f0f2f5' }}>
+          <Paper
+            elevation={0}
+            style={{
+              margin: '10px 0px',
+              border: '0.5px solid #f0f2f5',
+              backgroundColor: '#feffff',
+            }}
+          >
             <Stack direction='row'>
               <Grid
                 container
@@ -85,7 +94,14 @@ export default function profileMain(props: Props) {
           </Paper>
 
           {/**Đây là phần Personal information */}
-          <Paper elevation={0} style={{ margin: '10px 0px', border: '0.5px solid #f0f2f5' }}>
+          <Paper
+            elevation={0}
+            style={{
+              margin: '10px 0px',
+              border: '0.5px solid #f0f2f5',
+              backgroundColor: '#feffff',
+            }}
+          >
             <Stack direction='row' style={{ display: 'block' }}>
               <Grid item xs={12} style={{ width: '100%' }}>
                 <Typography style={{ fontSize: '1.5rem', color: '#325381', margin: '15px' }}>
@@ -106,18 +122,18 @@ export default function profileMain(props: Props) {
                 key={session?.user.id}
               >
                 <Grid item xs={4}>
-                  <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
+                  <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#325381' }}>
                     First Name
                   </Typography>
-                  <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
+                  <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#325381' }}>
                     {session && session.user.name}
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#d4d4d4' }}>
+                  <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#325381' }}>
                     Last Name
                   </Typography>
-                  <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#d4d4d4' }}>
+                  <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#325381' }}>
                     {session && session.user.name}
                   </Typography>
                 </Grid>
@@ -138,11 +154,11 @@ export default function profileMain(props: Props) {
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  padding: '10px',
+                  padding: '15px',
                 }}
               >
                 <Grid item xs={4}>
-                  <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
+                  <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#325381' }}>
                     Email address
                   </Typography>
                   <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
@@ -150,7 +166,7 @@ export default function profileMain(props: Props) {
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#d4d4d4' }}>
+                  <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#325381' }}>
                     Phone
                   </Typography>
                   <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#d4d4d4' }}>
@@ -166,11 +182,11 @@ export default function profileMain(props: Props) {
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  padding: '10px',
+                  padding: '15px',
                 }}
               >
                 <Grid item xs={12}>
-                  <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
+                  <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#325381' }}>
                     Bio
                   </Typography>
                   <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
@@ -196,11 +212,11 @@ export default function profileMain(props: Props) {
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
-                  padding: '10px',
+                  padding: '15px',
                 }}
               >
                 <Grid item xs={4}>
-                  <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
+                  <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#325381' }}>
                     Country
                   </Typography>
                   <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
@@ -208,7 +224,7 @@ export default function profileMain(props: Props) {
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#d4d4d4' }}>
+                  <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#325381' }}>
                     City/State
                   </Typography>
                   <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#d4d4d4' }}>
@@ -235,7 +251,7 @@ export default function profileMain(props: Props) {
                 }}
               >
                 <Grid item xs={4}>
-                  <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
+                  <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#325381' }}>
                     Postal Code
                   </Typography>
                   <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
@@ -243,7 +259,7 @@ export default function profileMain(props: Props) {
                   </Typography>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#d4d4d4' }}>
+                  <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#325381' }}>
                     TAX ID
                   </Typography>
                   <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#d4d4d4' }}>

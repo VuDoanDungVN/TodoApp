@@ -5,7 +5,7 @@ import { signIn, getCsrfToken, getProviders } from 'next-auth/react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
-import Container from '@mui/material/Container';
+import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import Box from '@mui/material/Box';
 import { FormControl, FormLabel, Typography } from '@mui/material';
 import Alert from '@mui/material/Alert';
@@ -14,7 +14,7 @@ import Image from 'next/image';
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
-import LockIcon from '@mui/icons-material/Lock';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import PersonIcon from '@mui/icons-material/Person';
 
 //CSS
@@ -24,7 +24,7 @@ const cssButton = { display: 'flex', alignItems: 'center', justifyContent: 'cent
 const cssContainer = { height: { sm: 'auto', md: '100vh' } };
 const cssBoxCenter = { justifyContent: 'center', alignItems: 'center', margin: '0 auto' };
 const font16 = { fontSize: 16, color: '#325381' };
-const cssIcon = { m: 1, color: '#98A9C0' };
+const cssIcon = { m: 2, color: '#98A9C0' };
 
 const cssBoxLogin = {
   display: 'flex',
@@ -34,8 +34,14 @@ const cssBoxLogin = {
   p: '20px;',
   borderRadius: 4,
   border: '1px solid #D4D4D4',
-  maxWidth: '350px',
+  maxWidth: '450px',
   margin: '0 auto',
+};
+
+const cssBackgroundImage = {
+  backgroundImage: `url('/images/background.png')`, // Thay đường dẫn tới ảnh của bạn ở đây
+  backgroundSize: 'full',
+  backgroundPosition: 'center',
 };
 
 //END CSS
@@ -58,7 +64,7 @@ const SignIn = () => {
       });
 
       if (result?.error) {
-        setError('IDまたはパスワードが間違っています');
+        setError('Sai Id hoặc mật khẩu!');
       } else {
         router.refresh();
         router.push(callbackUrl);
@@ -70,10 +76,38 @@ const SignIn = () => {
 
   return (
     <div>
-      <Box sx={cssBody}>
+      <Box sx={{ ...cssBody, ...cssBackgroundImage }}>
         <form noValidate>
           <Grid container alignItems='center' sx={cssContainer}>
             <Box sx={cssBoxCenter}>
+              <Grid
+                item
+                xs={12}
+                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+              >
+                <Image src='/logoLogin.png' alt='Logo' width={300} height={125} />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+              >
+                <Typography
+                  variant='h5'
+                  sx={{ color: '#fff', fontWeight: '800', fontSize: '30px' }}
+                >
+                  Wellcome to Website
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+              >
+                <Typography variant='h5' sx={{ color: '#fff', margin: '20px 0px 10px 0px' }}>
+                  Login to your account
+                </Typography>
+              </Grid>
               <Box sx={cssBoxLogin}>
                 <Grid item xs={12}>
                   <Grid container spacing={2}>
@@ -83,13 +117,13 @@ const SignIn = () => {
 
                     <Grid item xs={12}>
                       <FormLabel id='email'>
-                        <Typography sx={font16}>ユーザーID :</Typography>
+                        <Typography sx={font16}>Email :</Typography>
                       </FormLabel>
                       <Paper sx={{ display: 'flex', alignItems: 'center' }}>
                         <PersonIcon sx={cssIcon} />
                         <Divider orientation='vertical' flexItem />
                         <InputBase
-                          sx={{ ml: 1, flex: 1 }}
+                          sx={{ ml: 1, flex: 1, p: 1 }}
                           id='email'
                           name='email'
                           autoComplete='email'
@@ -106,13 +140,13 @@ const SignIn = () => {
                     </Grid>
                     <Grid item xs={12}>
                       <FormLabel id='email'>
-                        <Typography sx={font16}>パスワード :</Typography>
+                        <Typography sx={font16}>Mật khẩu :</Typography>
                       </FormLabel>
                       <Paper sx={{ display: 'flex', alignItems: 'center' }}>
-                        <LockIcon sx={cssIcon} />
+                        <FingerprintIcon sx={cssIcon} />
                         <Divider orientation='vertical' flexItem />
                         <InputBase
-                          sx={{ ml: 1, flex: 1 }}
+                          sx={{ ml: 1, flex: 1, p: 1 }}
                           id='password'
                           name='password'
                           type='password'
@@ -130,6 +164,7 @@ const SignIn = () => {
                             }
                           }}
                         />
+                        <VisibilityOffIcon sx={cssIcon} />
                       </Paper>
                     </Grid>
                     <Grid item xs={12} sx={cssButton}>
@@ -138,7 +173,7 @@ const SignIn = () => {
                         onClick={onSubmit}
                         sx={{ backgroundColor: '#325381' }}
                       >
-                        ログイン
+                        Đăng nhập
                       </Button>
                     </Grid>
                   </Grid>

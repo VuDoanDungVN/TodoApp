@@ -7,15 +7,15 @@ const logger = pino({
   level: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
   timestamp: pino.stdTimeFunctions.isoTime,
   transport: {
-    target: "pino-pretty"
+    target: 'pino-pretty',
   },
   formatters: {
     level: (label) => ({ level: label }), // default: { level: number }
-      bindings: (bindings) => ({
-        pid: bindings.pid,
-        hostname: bindings.hostname,
-        name: bindings.name
-      })
+    bindings: (bindings) => ({
+      pid: bindings.pid,
+      hostname: bindings.hostname,
+      name: bindings.name,
+    }),
   },
 });
 

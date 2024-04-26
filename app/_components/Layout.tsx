@@ -19,11 +19,12 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import 'dayjs/locale/ja';
 import { SessionProvider } from 'next-auth/react';
-import { mainMenu, secondaryMenu } from './Menu';
+import MainMenu from '@/app/_components/Menu';
 import AccountInfo from './AccountInfo';
-import Footer from './footer';
-
-const cssMainComponent = { flexGrow: 1, overflow: 'hidden' };
+import { useSession, signIn, signOut } from 'next-auth/react';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+const cssMainComponent = { flexGrow: 1, overflow: 'auto' };
 // Width of the drawer
 const drawerWidth: number = 240;
 // Interface for AppBarProps
@@ -35,7 +36,7 @@ const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  backgroundColor: '#322C2B',
+  backgroundColor: '#fff',
   marginLeft: drawerWidth,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
@@ -90,7 +91,7 @@ export default function Layout({ children }: LayoutProps) {
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
+  const { data: session, status } = useSession();
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex', width: '100%' }}>
@@ -110,7 +111,7 @@ export default function Layout({ children }: LayoutProps) {
                 ...(open && { display: 'none' }),
               }}
             >
-              <MenuIcon />
+              <MenuIcon style={{ color: '#322C2B' }} />
             </IconButton>
             {/* Account Info */}
             <SessionProvider>
@@ -135,19 +136,29 @@ export default function Layout({ children }: LayoutProps) {
               </Grid>
             </Grid>
           </Toolbar>
-          <Divider />
+          {/**Dấu gạch ở menu */}
+          <Divider style={{ color: '#fff' }} />
           {/* Main Menu */}
-          <List component='nav' style={{ height: '93vh' }}>
-            {mainMenu}
+          <List component='nav' style={{ height: '100vh', backgroundColor: '#325381' }}>
+            <MainMenu />
+            {/**Đoạn này là nơi phân vùng cho menu đoạn 2 */}
+            {/* {secondaryMenu} */}
             <Divider sx={{ my: 1 }} />
-            {secondaryMenu}
           </List>
         </Drawer>
 
         {/* Content */}
+
         <Box component='main' sx={cssMainComponent}>
           <Toolbar />
-          {children}
+          {session ? (
+            children
+          ) : (
+            <Alert severity='error' style={{ display: 'flex', justifyContent: 'center' }}>
+              <AlertTitle>Error</AlertTitle>
+              This is an error Alert with a scary title.
+            </Alert>
+          )}
         </Box>
       </Box>
     </ThemeProvider>

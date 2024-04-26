@@ -96,12 +96,12 @@ const handler = NextAuth({
   },
   secret: process.env.NEXTAUTH_SECRET,
   // サインイン・サインアウトで飛ぶカスタムログインページを指定
-  
-    pages: {
-      signIn: "/auth/signin",
 
-    },
-    
+  pages: {
+    signIn: '/auth/signin',
+    signOut: '/auth/signout',
+  },
+
   // Enable debug messages in the console if you are having problems
   debug: process.env.NODE_ENV === 'development',
 });
