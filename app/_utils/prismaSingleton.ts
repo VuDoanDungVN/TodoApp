@@ -15,7 +15,6 @@ export const prisma =
   new PrismaClient({
     // SQL(値は含まない)を出力する場合は以下のように設定する
     //log: ["query"],
-
     // SQL(値も含む)を出力する場合は以下のように設定し、
     // さらに、下部でコメントアウトしている `prisma.$on...` も有効にする
     /*

@@ -1,5 +1,5 @@
 'use client';
-
+import { useRouter } from 'next/navigation';
 import React from 'react';
 import Button from '@mui/material/Button';
 import { Box, Grid, TextField, Typography } from '@mui/material';
@@ -20,7 +20,12 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 const AccountInfo = () => {
+  const router = useRouter();
   const { data: session, status } = useSession();
+  const handleSingOut = async () => {
+    await signOut();
+    router.push('/auth/signin');
+  };
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -66,26 +71,36 @@ const AccountInfo = () => {
           item
           sx={{ flex: '1', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}
         >
-          <Stack direction='row' spacing={2}>
-            <IconButton
-              color='inherit'
-              aria-controls={open ? 'basic-menu' : undefined}
-              aria-haspopup='true'
-              aria-expanded={open ? 'true' : undefined}
-              onClick={handleClick}
-            >
-              <Avatar alt='Vu dung' src='/images/img/user.jpg' />
-            </IconButton>
-            <Menu id='basic-menu' anchorEl={anchorEl} open={open} onClose={handleClose}>
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
-              <MenuItem onClick={handleClose}>
-                <Button onClick={() => signOut()} variant='contained' color='secondary'>
-                  Logout
-                </Button>
-              </MenuItem>
-            </Menu>
-          </Stack>
+          {session ? (
+            <Stack direction='row' spacing={2}>
+              <IconButton
+                color='inherit'
+                aria-controls={open ? 'basic-menu' : undefined}
+                aria-haspopup='true'
+                aria-expanded={open ? 'true' : undefined}
+                onClick={handleClick}
+              >
+                <Avatar alt='Vu dung' src='/images/img/user.jpg' />
+              </IconButton>
+
+              <Menu id='basic-menu' anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleClose}>My account</MenuItem>
+
+                <MenuItem onClick={handleClose}>
+                  <Link onClick={handleSingOut} color='secondary'>
+                    Đăng xuất
+                  </Link>
+                </MenuItem>
+              </Menu>
+            </Stack>
+          ) : (
+            <MenuItem onClick={handleClose}>
+              <Link href='/auth/signin' color='secondary' style={{ textDecoration: 'none' }}>
+                Đăng nhập
+              </Link>
+            </MenuItem>
+          )}
           <IconButton color='inherit'>
             <Badge badgeContent={2} color='error'>
               <NotificationsIcon />
@@ -98,33 +113,3 @@ const AccountInfo = () => {
 };
 
 export default AccountInfo;
-
-{
-  /* <Grid container spacing={2} xs={12}>
-<Grid item style={{ display: 'flex', justifyContent: 'space-between' }}>
-  <Grid item xs={6}>
-    {session && (
-      <Box>
-        <p>Xin chào : {session.user.name}</p>
-      </Box>
-    )}
-  </Grid>
-  <Grid item xs={6}>
-    <Button
-      variant='contained'
-      color='primary'
-      startIcon={<PersonIcon />}
-      onClick={() => {
-        if (session) {
-          signOut();
-        } else {
-          signIn();
-        }
-      }}
-    >
-      {session ? 'Sign out' : 'Sign in'}
-    </Button>
-  </Grid>
-</Grid>
-</Grid> */
-}

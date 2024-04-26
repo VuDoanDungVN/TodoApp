@@ -170,16 +170,16 @@ export default function UserForm(props: Props) {
                 https://medium.com/@david.zhao.blog/mui-x-datepicker-6-use-dayjs-instead-of-moment-for-react-hook-form-d590f5d62023
           */}
           <Controller
-            name={"joinningDate"}
+            name={'joinningDate'}
             control={control}
             render={({ field: { onChange, value } }) => (
-                <DateTimePicker
-                  label="Joinning Date"
-                  format="YYYY/MM/DD HH:mm:ss"
-                  onChange={onChange}
-                  value={value ? dayjs(value) : undefined}
-                  defaultValue={user ? dayjs(user.joinningDate) : undefined}
-                />
+              <DateTimePicker
+                label='Joinning Date'
+                format='YYYY/MM/DD HH:mm:ss'
+                onChange={onChange}
+                value={value ? dayjs(value) : undefined}
+                defaultValue={user ? dayjs(user.joinningDate) : undefined}
+              />
             )}
           />
         </FormControl>

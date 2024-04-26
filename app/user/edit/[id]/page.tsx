@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import UserForm from '@/app/user/_components/user-form';
 import type { UserWithRoleDepartment } from '@/app/_repositories/User';
@@ -17,9 +17,9 @@ export default function UserEdit({ params }: { params: Props }) {
   const { data: roles } = useSWR<Role[]>(`/api/role`, fetcher);
   const { data: user } = useSWR<UserWithRoleDepartment>(`/api/user/${params.id}`, fetcher);
 
-  if(!departments) return;
-  if(!roles) return;
-  if(!user) return;
+  if (!departments) return;
+  if (!roles) return;
+  if (!user) return;
 
   return <UserForm user={user} departments={departments} roles={roles} onSuccessUrl='/user/' />;
 }
