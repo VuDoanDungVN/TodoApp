@@ -19,9 +19,9 @@ async function main() {
   // Tạo các users
   const user1 = await prisma.user.create({
     data: {
-      name: 'John Doe',
-      email: 'john@example.com',
-      password: 'password123',
+      name: 'Vũ Doãn Dũng',
+      email: 'vudungit92@gmail.com',
+      password: 'admin',
       roleId: roleAdmin.id,
     },
   });

@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
 export default async function Home({}) {
-  redirect('/');
+  redirect('/home');
+  //Chuyển hướng trang chủ về /home
 }
