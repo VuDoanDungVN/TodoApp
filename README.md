@@ -9,11 +9,8 @@ npm run dev<br>
 ## Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.<br>
 
 - admin アカウント<br>
-  - Account: admin@ts.occ.co.jp<br>
+  - Account: vudungit92@gmail.com<br>
   - Password: admin<br>
-- user アカウント<br>
-  - Account: user@ts.occ.co.jp<br>
-  - Password: user<br>
 
 ### DB関連の更新を行った場合<br>
 
