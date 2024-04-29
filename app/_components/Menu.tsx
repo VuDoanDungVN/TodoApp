@@ -29,10 +29,16 @@ export default function NavbarMenu() {
       aria-labelledby='nested-list-subheader'
     >
       <ListItemButton onClick={handleClick}>
-        <ListItemIcon>
-          <div style={{ position: 'relative', width: '24px', height: '24px' }}>
+        <ListItemIcon style={{ paddingLeft: '15px' }}>
+          <div style={{ position: 'relative', width: '30px', height: '30px' }}>
             {session?.user.image ? (
-              <Image src={session?.user.image} alt='User' layout='fill' objectFit='cover' />
+              <Image
+                src={session?.user.image}
+                alt='User'
+                layout='fill'
+                objectFit='cover'
+                style={{ borderRadius: '50%' }}
+              />
             ) : (
               <AccountBoxIcon />
             )}
