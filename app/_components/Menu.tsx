@@ -29,7 +29,7 @@ export default function NavbarMenu() {
       aria-labelledby='nested-list-subheader'
     >
       <ListItemButton onClick={handleClick}>
-        <ListItemIcon style={{ paddingLeft: '15px' }}>
+        <ListItemIcon style={{ paddingLeft: '5px' }}>
           <div style={{ position: 'relative', width: '30px', height: '30px' }}>
             {session?.user.image ? (
               <Image
@@ -49,7 +49,7 @@ export default function NavbarMenu() {
       </ListItemButton>
       <Collapse in={open} timeout='auto' unmountOnExit>
         <List component='div' disablePadding>
-          <ListItemButton sx={{ pl: 4 }} href='/profile-user'>
+          <ListItemButton sx={{ pl: 3 }} href='/profile-user'>
             <ListItemIcon>
               <PermContactCalendarIcon />
             </ListItemIcon>

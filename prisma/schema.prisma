@@ -60,6 +60,7 @@ model User {
   role                Role                 @relation(fields: [roleId], references: [id])
   PersonalInformation PersonalInformation?
   address             Address?
+  posts               Post[]
 }
 
 model PersonalInformation {
@@ -98,4 +99,34 @@ model Role {
   id    String @id @default(cuid())
   name  String @unique
   users User[]
+}
+
+model Post {
+  id           String   @id @default(cuid())
+  title        String
+  slug         String   @unique
+  thumbnail    String
+  description  String
+  content      String
+  publishedAt  DateTime @default(now())
+  readTime     Int
+  likes        Int      @default(0)
+  shares       Int      @default(0)
+  commentCount Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  categoryId   String
+  Category     Category @relation(fields: [categoryId], references: [id])
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Post Post[]
 }

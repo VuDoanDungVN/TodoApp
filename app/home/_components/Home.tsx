@@ -5,6 +5,12 @@ import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import CommentBankIcon from '@mui/icons-material/CommentBank';
 import ShareIcon from '@mui/icons-material/Share';
+import { Post } from '@/app/_repositories/Post';
+
+type Props = {
+  posts: Post[];
+};
+
 // Styling for Paper
 const cssPaperCard = {
   borderRadius: 2,
@@ -15,9 +21,9 @@ const cssPaperCard = {
     backgroundColor: '#f2f2f2', // Change this to the color you want on hover
   },
   transition: 'background-color 0.3s',
-  cursor: 'pointer',
 };
-export default function Home() {
+export default function Home(props: Props) {
+  const posts = props.posts;
   return (
     <Box>
       <Grid container xs={12} spacing={2}>
@@ -203,362 +209,123 @@ export default function Home() {
             </Grid>
           </Grid>
         </Grid>
+
+        {/**Đây là phần hiển thị Post */}
         <Grid item xs={9}>
           <Grid item xs={12} style={{ borderRadius: 10, margin: 10, padding: 10 }}>
             <Grid container xs={12}>
+              <Typography variant='h6'>Trending</Typography>
               <Grid
                 item
                 xs={12}
                 style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px' }}
               >
-                <Grid item xs={3}>
-                  <Paper sx={cssPaperCard} variant='outlined'>
-                    <Grid container xs={12}>
-                      <Grid
-                        item
-                        xs={12}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          position: 'relative',
-                          width: '100%',
-                          height: 200,
-                        }}
-                      >
-                        <Image
-                          src='/images/post/post-1.jpg'
-                          alt={'Title'}
-                          layout='fill'
-                          objectFit='cover'
-                          style={{ borderRadius: 5, position: 'absolute' }}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Breadcrumbs
-                          aria-label='breadcrumb'
-                          style={{ fontSize: '12px', margin: '10px 0px' }}
+                {posts?.map((post) => (
+                  <Grid item xs={3} key={post.id}>
+                    <Paper sx={cssPaperCard} variant='outlined'>
+                      <Grid container xs={12}>
+                        <Grid
+                          item
+                          xs={12}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            position: 'relative',
+                            width: '100%',
+                            height: 200,
+                          }}
                         >
-                          <Link underline='hover' color='inherit' href='/'>
-                            News
-                          </Link>
-                          <Link
-                            underline='hover'
-                            color='inherit'
-                            href='/material-ui/getting-started/installation/'
+                          <Image
+                            src={post?.thumbnail}
+                            alt={'Title'}
+                            layout='fill'
+                            objectFit='cover'
+                            style={{ borderRadius: 5, position: 'absolute' }}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Breadcrumbs
+                            aria-label='breadcrumb'
+                            style={{ fontSize: '12px', margin: '10px 0px' }}
                           >
-                            Thế giới
-                          </Link>
-                          <Typography color='text.primary' style={{ fontSize: '12px' }}>
-                            Chính trị
-                          </Typography>
-                        </Breadcrumbs>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography style={{ fontSize: 13 }}>
-                          <strong>Mobile app design trends 2024 comprehensive collection.</strong>
-                        </Typography>
-                        <Typography
-                          style={{ fontSize: '12px', margin: '10px 0px', color: '#bdbdbd' }}
-                        >
-                          Mobile app design trends 2024 comprehensive collection.Mobile app design
-                          trends 2024 comprehensive collection.
-                        </Typography>
-                        <Grid container xs={12}>
-                          <Grid
-                            item
-                            xs={6}
-                            style={{ display: 'flex', alignItems: 'center', gap: 10 }}
-                          >
-                            <Typography style={{ fontSize: 11 }}>
-                              24 December | 7 min read
+                            <Link underline='hover' color='inherit' href='/'>
+                              News
+                            </Link>
+                            <Link
+                              underline='hover'
+                              color='inherit'
+                              href='/material-ui/getting-started/installation/'
+                            >
+                              Thế giới
+                            </Link>
+                            <Typography color='text.primary' style={{ fontSize: '12px' }}>
+                              Chính trị
                             </Typography>
-                          </Grid>
-                          <Grid
-                            item
-                            xs={6}
+                          </Breadcrumbs>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Link underline='hover' color='inherit' href='/'>
+                            <Typography
+                              style={{ fontSize: 13, maxHeight: '40px', minHeight: '40px' }}
+                            >
+                              <strong>{post.title}</strong>
+                            </Typography>
+                          </Link>
+                          <Typography
                             style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 10,
-                              justifyContent: 'flex-end',
+                              fontSize: '12px',
+                              margin: '10px 0px',
+                              color: '#bdbdbd',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
                             }}
                           >
-                            <Typography style={{ fontSize: 11 }}>
-                              <ThumbUpIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
-                            </Typography>
-                            <Typography style={{ fontSize: 11 }}>
-                              <CommentBankIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
-                            </Typography>
-                            <Typography style={{ fontSize: 11 }}>
-                              <ShareIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
-                            </Typography>
+                            {post.description}
+                          </Typography>
+                          <Grid container xs={12}>
+                            <Grid
+                              item
+                              xs={6}
+                              style={{ display: 'flex', alignItems: 'center', gap: 10 }}
+                            >
+                              <Typography style={{ fontSize: 11 }}>
+                                {'Ngày ' +
+                                  post?.createdAt.toLocaleDateString('vi-VN', { day: '2-digit' }) +
+                                  ' Tháng ' +
+                                  post?.createdAt.toLocaleDateString('vi-VN', {
+                                    month: '2-digit',
+                                  }) +
+                                  ' Năm ' +
+                                  post?.createdAt.toLocaleDateString('vi-VN', { year: 'numeric' })}
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              xs={6}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 10,
+                                justifyContent: 'flex-end',
+                              }}
+                            >
+                              <Typography style={{ fontSize: 10 }}>
+                                <ThumbUpIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
+                              </Typography>
+                              <Typography style={{ fontSize: 10 }}>
+                                <CommentBankIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
+                              </Typography>
+                              <Typography style={{ fontSize: 10 }}>
+                                <ShareIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
+                              </Typography>
+                            </Grid>
                           </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                  </Paper>
-                </Grid>
-                <Grid item xs={3}>
-                  <Paper sx={cssPaperCard} variant='outlined'>
-                    <Grid container xs={12}>
-                      <Grid
-                        item
-                        xs={12}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          position: 'relative',
-                          width: '100%',
-                          height: 200,
-                        }}
-                      >
-                        <Image
-                          src='/images/post/post-1.jpg'
-                          alt={'Title'}
-                          layout='fill'
-                          objectFit='cover'
-                          style={{ borderRadius: 5, position: 'absolute' }}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Breadcrumbs
-                          aria-label='breadcrumb'
-                          style={{ fontSize: '12px', margin: '10px 0px' }}
-                        >
-                          <Link underline='hover' color='inherit' href='/'>
-                            News
-                          </Link>
-                          <Link
-                            underline='hover'
-                            color='inherit'
-                            href='/material-ui/getting-started/installation/'
-                          >
-                            Thế giới
-                          </Link>
-                          <Typography color='text.primary' style={{ fontSize: '12px' }}>
-                            Chính trị
-                          </Typography>
-                        </Breadcrumbs>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography style={{ fontSize: 13 }}>
-                          <strong>Mobile app design trends 2024 comprehensive collection.</strong>
-                        </Typography>
-                        <Typography
-                          style={{ fontSize: '12px', margin: '10px 0px', color: '#bdbdbd' }}
-                        >
-                          Mobile app design trends 2024 comprehensive collection.Mobile app design
-                          trends 2024 comprehensive collection.
-                        </Typography>
-                        <Grid container xs={12}>
-                          <Grid
-                            item
-                            xs={6}
-                            style={{ display: 'flex', alignItems: 'center', gap: 10 }}
-                          >
-                            <Typography style={{ fontSize: 11 }}>
-                              24 December | 7 min read
-                            </Typography>
-                          </Grid>
-                          <Grid
-                            item
-                            xs={6}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 10,
-                              justifyContent: 'flex-end',
-                            }}
-                          >
-                            <Typography style={{ fontSize: 11 }}>
-                              <ThumbUpIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
-                            </Typography>
-                            <Typography style={{ fontSize: 11 }}>
-                              <CommentBankIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
-                            </Typography>
-                            <Typography style={{ fontSize: 11 }}>
-                              <ShareIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                </Grid>
-                <Grid item xs={3}>
-                  <Paper sx={cssPaperCard} variant='outlined'>
-                    <Grid container xs={12}>
-                      <Grid
-                        item
-                        xs={12}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          position: 'relative',
-                          width: '100%',
-                          height: 200,
-                        }}
-                      >
-                        <Image
-                          src='/images/post/post-1.jpg'
-                          alt={'Title'}
-                          layout='fill'
-                          objectFit='cover'
-                          style={{ borderRadius: 5, position: 'absolute' }}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Breadcrumbs
-                          aria-label='breadcrumb'
-                          style={{ fontSize: '12px', margin: '10px 0px' }}
-                        >
-                          <Link underline='hover' color='inherit' href='/'>
-                            News
-                          </Link>
-                          <Link
-                            underline='hover'
-                            color='inherit'
-                            href='/material-ui/getting-started/installation/'
-                          >
-                            Thế giới
-                          </Link>
-                          <Typography color='text.primary' style={{ fontSize: '12px' }}>
-                            Chính trị
-                          </Typography>
-                        </Breadcrumbs>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography style={{ fontSize: 13 }}>
-                          <strong>Mobile app design trends 2024 comprehensive collection.</strong>
-                        </Typography>
-                        <Typography
-                          style={{ fontSize: '12px', margin: '10px 0px', color: '#bdbdbd' }}
-                        >
-                          Mobile app design trends 2024 comprehensive collection.Mobile app design
-                          trends 2024 comprehensive collection.
-                        </Typography>
-                        <Grid container xs={12}>
-                          <Grid
-                            item
-                            xs={6}
-                            style={{ display: 'flex', alignItems: 'center', gap: 10 }}
-                          >
-                            <Typography style={{ fontSize: 11 }}>
-                              24 December | 7 min read
-                            </Typography>
-                          </Grid>
-                          <Grid
-                            item
-                            xs={6}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 10,
-                              justifyContent: 'flex-end',
-                            }}
-                          >
-                            <Typography style={{ fontSize: 11 }}>
-                              <ThumbUpIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
-                            </Typography>
-                            <Typography style={{ fontSize: 11 }}>
-                              <CommentBankIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
-                            </Typography>
-                            <Typography style={{ fontSize: 11 }}>
-                              <ShareIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                </Grid>
-                <Grid item xs={3}>
-                  <Paper sx={cssPaperCard} variant='outlined'>
-                    <Grid container xs={12}>
-                      <Grid
-                        item
-                        xs={12}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          position: 'relative',
-                          width: '100%',
-                          height: 200,
-                        }}
-                      >
-                        <Image
-                          src='/images/post/post-1.jpg'
-                          alt={'Title'}
-                          layout='fill'
-                          objectFit='cover'
-                          style={{ borderRadius: 5, position: 'absolute' }}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Breadcrumbs
-                          aria-label='breadcrumb'
-                          style={{ fontSize: '12px', margin: '10px 0px' }}
-                        >
-                          <Link underline='hover' color='inherit' href='/'>
-                            News
-                          </Link>
-                          <Link
-                            underline='hover'
-                            color='inherit'
-                            href='/material-ui/getting-started/installation/'
-                          >
-                            Thế giới
-                          </Link>
-                          <Typography color='text.primary' style={{ fontSize: '12px' }}>
-                            Chính trị
-                          </Typography>
-                        </Breadcrumbs>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Typography style={{ fontSize: 13 }}>
-                          <strong>Mobile app design trends 2024 comprehensive collection.</strong>
-                        </Typography>
-                        <Typography
-                          style={{ fontSize: '12px', margin: '10px 0px', color: '#bdbdbd' }}
-                        >
-                          Mobile app design trends 2024 comprehensive collection.Mobile app design
-                          trends 2024 comprehensive collection.
-                        </Typography>
-                        <Grid container xs={12}>
-                          <Grid
-                            item
-                            xs={6}
-                            style={{ display: 'flex', alignItems: 'center', gap: 10 }}
-                          >
-                            <Typography style={{ fontSize: 11 }}>
-                              24 December | 7 min read
-                            </Typography>
-                          </Grid>
-                          <Grid
-                            item
-                            xs={6}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 10,
-                              justifyContent: 'flex-end',
-                            }}
-                          >
-                            <Typography style={{ fontSize: 11 }}>
-                              <ThumbUpIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
-                            </Typography>
-                            <Typography style={{ fontSize: 11 }}>
-                              <CommentBankIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
-                            </Typography>
-                            <Typography style={{ fontSize: 11 }}>
-                              <ShareIcon style={{ color: '#bdbdbd', fontSize: '20px' }} />
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                </Grid>
+                    </Paper>
+                  </Grid>
+                ))}
               </Grid>
             </Grid>
           </Grid>
