@@ -1,44 +1,62 @@
-'use client';
 import * as React from 'react';
-import Link from 'next/link';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import Avatar from '@mui/material/Avatar';
-import Stack from '@mui/material/Stack';
-import PeopleIcon from '@mui/icons-material/People';
-import Button from '@mui/material/Button';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import PersonIcon from '@mui/icons-material/Person';
-import IconButton from '@mui/material/IconButton';
-import { Box, Typography } from '@mui/material';
-import { signIn, signOut } from 'next-auth/react';
+import Collapse from '@mui/material/Collapse';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 
-export default function MainMenu() {
+export default function NavbarMenu() {
+  const [open, setOpen] = React.useState(true);
+  const { data: session, status } = useSession();
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
   return (
-    <Box>
-      <Link href='/' passHref>
-        <ListItemButton>
-          <ListItemIcon>
-            <Stack direction='row' spacing={2}>
-              <IconButton color='inherit' style={{ width: '30px', height: '30px' }}>
-                <Avatar alt='Vu dung' src='/images/img/user.jpg' />
-              </IconButton>
-            </Stack>
-          </ListItemIcon>
-          <Typography>Vũ Nhật Minh</Typography>
-        </ListItemButton>
-      </Link>
-      <Link href='/user' passHref>
-        <ListItemButton>
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary='User' />
-        </ListItemButton>
-      </Link>
-    </Box>
+    <List
+      sx={{
+        width: '100%',
+        maxWidth: 350,
+        bgcolor: 'background.paper',
+      }}
+      component='nav'
+      aria-labelledby='nested-list-subheader'
+    >
+      <ListItemButton onClick={handleClick}>
+        <ListItemIcon style={{ paddingLeft: '15px' }}>
+          <div style={{ position: 'relative', width: '30px', height: '30px' }}>
+            {session?.user.image ? (
+              <Image
+                src={session?.user.image}
+                alt='User'
+                layout='fill'
+                objectFit='cover'
+                style={{ borderRadius: '50%' }}
+              />
+            ) : (
+              <AccountBoxIcon />
+            )}
+          </div>
+        </ListItemIcon>
+        <ListItemText primary={`${session?.user?.name}`} />
+        {open ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={open} timeout='auto' unmountOnExit>
+        <List component='div' disablePadding>
+          <ListItemButton sx={{ pl: 4 }} href='/profile-user'>
+            <ListItemIcon>
+              <PermContactCalendarIcon />
+            </ListItemIcon>
+            <ListItemText primary='Profile' />
+          </ListItemButton>
+        </List>
+      </Collapse>
+    </List>
   );
 }

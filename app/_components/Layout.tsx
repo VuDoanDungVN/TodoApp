@@ -24,7 +24,14 @@ import AccountInfo from './AccountInfo';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-const cssMainComponent = { flexGrow: 1, overflow: 'auto' };
+import Footer from './footer';
+const cssMainComponent = {
+  flexGrow: 1,
+  overflow: 'auto',
+  margin: '70px 10px 10px 10px',
+  borderRadius: 2,
+  height: '91vh',
+};
 // Width of the drawer
 const drawerWidth: number = 240;
 // Interface for AppBarProps
@@ -137,9 +144,9 @@ export default function Layout({ children }: LayoutProps) {
             </Grid>
           </Toolbar>
           {/**Dấu gạch ở menu */}
-          <Divider style={{ color: '#fff' }} />
+          <Divider style={{ color: '#ccc' }} />
           {/* Main Menu */}
-          <List component='nav' style={{ height: '100vh', backgroundColor: '#325381' }}>
+          <List component='nav' style={{ height: '100vh' }}>
             <MainMenu />
             {/**Đoạn này là nơi phân vùng cho menu đoạn 2 */}
             {/* {secondaryMenu} */}
@@ -150,15 +157,15 @@ export default function Layout({ children }: LayoutProps) {
         {/* Content */}
 
         <Box component='main' sx={cssMainComponent}>
-          <Toolbar />
           {session ? (
             children
           ) : (
             <Alert severity='error' style={{ display: 'flex', justifyContent: 'center' }}>
-              <AlertTitle>Error</AlertTitle>
-              This is an error Alert with a scary title.
+              <AlertTitle>Thông báo</AlertTitle>
+              Bạn cần phải đăng nhập để sử dụng chức năng này!
             </Alert>
           )}
+          <Footer />
         </Box>
       </Box>
     </ThemeProvider>

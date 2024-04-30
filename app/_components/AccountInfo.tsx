@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import Button from '@mui/material/Button';
-import { Box, Grid, TextField, Typography } from '@mui/material';
+import { Box, Divider, Grid, TextField, Typography } from '@mui/material';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import HomeIcon from '@mui/icons-material/Home';
 import IconButton from '@mui/material/IconButton';
@@ -19,6 +19,7 @@ import Stack from '@mui/material/Stack';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
+import { BorderBottom } from '@mui/icons-material';
 const AccountInfo = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -38,13 +39,13 @@ const AccountInfo = () => {
     <Box style={{ width: '100%' }}>
       <Grid container spacing={1} justifyContent='space-between' alignItems='center'>
         <Grid item xs={7} sx={{ flex: '1' }}>
-          <Breadcrumbs aria-label='breadcrumb' style={{ color: '#fff' }}>
-            <Link underline='hover' color='white' href='/#'>
+          <Breadcrumbs aria-label='breadcrumb' style={{ color: '#325381' }}>
+            <Link underline='hover' color='black' href='/'>
               <IconButton>
-                <HomeIcon style={{ color: '#fff' }} />
+                <HomeIcon style={{ color: '#325381' }} />
               </IconButton>
             </Link>
-            <Typography color='white'>Trang chủ</Typography>
+            <Typography color='black'>Trang chủ</Typography>
           </Breadcrumbs>
         </Grid>
         <Grid
@@ -83,12 +84,26 @@ const AccountInfo = () => {
                 <Avatar alt='Vu dung' src='/images/img/user.jpg' />
               </IconButton>
 
-              <Menu id='basic-menu' anchorEl={anchorEl} open={open} onClose={handleClose}>
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
+              <Menu
+                id='basic-menu'
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                style={{ color: '#325381' }}
+              >
+                <MenuItem onClick={handleClose} style={{ fontSize: '14px' }}>
+                  Profile
+                </MenuItem>
+                <MenuItem onClick={handleClose} style={{ fontSize: '14px' }}>
+                  My account
+                </MenuItem>
 
-                <MenuItem onClick={handleClose}>
-                  <Link onClick={handleSingOut} color='secondary'>
+                <MenuItem onClick={handleClose} style={{ fontSize: '14px' }}>
+                  <Link
+                    onClick={handleSingOut}
+                    color='secondary'
+                    style={{ textDecoration: 'none', color: '#d32f2f' }}
+                  >
                     Đăng xuất
                   </Link>
                 </MenuItem>
@@ -103,11 +118,12 @@ const AccountInfo = () => {
           )}
           <IconButton color='inherit'>
             <Badge badgeContent={2} color='error'>
-              <NotificationsIcon />
+              <NotificationsIcon style={{ color: '#ccc' }} />
             </Badge>
           </IconButton>
         </Grid>
       </Grid>
+      <Divider style={{ color: '#ccc', width: '100%' }} />
     </Box>
   );
 };

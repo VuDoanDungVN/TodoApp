@@ -25,7 +25,7 @@ export async function middleware(req: NextRequest) {
 
   if (session && isAuthPath && pathname === '/api/auth/signin') {
     const url = req.nextUrl.clone();
-    url.pathname = '/profile-user'; // Chuyển hướng người dùng đã đăng nhập đến trang dashboard nếu họ truy cập /api/auth/signin
+    url.pathname = '/home'; // Chuyển hướng người dùng đã đăng nhập đến trang dashboard nếu họ truy cập /api/auth/signin
     return NextResponse.redirect(url);
   }
 
@@ -33,5 +33,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/dashboard', '/settings'],
+  matcher: ['/home', '/dashboard', '/settings'],
 };
