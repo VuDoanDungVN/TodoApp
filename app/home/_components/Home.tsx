@@ -236,7 +236,7 @@ export default function Home(props: Props) {
                           }}
                         >
                           <Image
-                            src={post?.thumbnail}
+                            src={post?.thumbnail || 'default_thumbnail.png'}
                             alt={'Title'}
                             layout='fill'
                             objectFit='cover'

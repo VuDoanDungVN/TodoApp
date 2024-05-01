@@ -1,13 +1,13 @@
 import React from 'react';
 import CreatePost from './_components/create-post';
-import { PostRepository } from '../_repositories/Post';
+import { UserRepository } from '../_repositories/User';
 
 export default async function CreatePostPages() {
-  const posts = await PostRepository.findMany();
+  const user = await UserRepository.findMany();
 
   return (
     <div>
-      <CreatePost post={posts} />
+      <CreatePost user={user} />
     </div>
   );
 }

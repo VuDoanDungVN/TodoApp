@@ -18,6 +18,7 @@ export namespace UserRepository {
         role: true,
         PersonalInformation: true,
         address: true,
+        posts: true,
       },
     });
   }
@@ -36,6 +37,7 @@ export namespace UserRepository {
         role: true,
         PersonalInformation: true,
         address: true,
+        posts: true,
       },
       where: {
         id: id,
