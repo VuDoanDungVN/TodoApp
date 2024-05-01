@@ -80,7 +80,7 @@ async function main() {
 
   // Seed categories
   const categoryTech = await prisma.category.upsert({
-    where: { name: 'Technology' },
+    where: { id: '1', name: 'Technology', slug: 'technology' },
     update: {},
     create: {
       name: 'Technology',
@@ -89,38 +89,38 @@ async function main() {
   });
 
   const categoryNews = await prisma.category.upsert({
-    where: { name: 'News' },
+    where: { id: '2', name: 'News', slug: 'news' },
     update: {},
     create: {
       name: 'News',
       slug: 'news',
     },
   });
-
   // Seed posts
-  await prisma.post.createMany({
-    data: [
-      {
-        title: 'First Post',
-        slug: 'first-post',
-        thumbnail: 'https://example.com/thumbnail.jpg',
-        description: 'This is the first post.',
-        content: 'This is the content of the first post.',
-        readTime: 5,
-        userId: admin.id,
-        categoryId: categoryTech.id,
-      },
-      {
-        title: 'Second Post',
-        slug: 'second-post',
-        thumbnail: 'https://example.com/thumbnail2.jpg',
-        description: 'This is the second post.',
-        content: 'This is the content of the second post.',
-        readTime: 10,
-        userId: user.id,
-        categoryId: categoryNews.id,
-      },
-    ],
+  const post1 = await prisma.post.upsert({
+    where: { slug: 'technology-post' },
+    update: {},
+    create: {
+      title: 'Technology Post',
+      slug: 'technology-post',
+      thumbnail: '/images/thumnail/thumbnail-1.jpg',
+      description: 'This is a technology post description.',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      userId: admin.id, // Assuming admin.id is the ID of the admin user
+    },
+  });
+
+  const post2 = await prisma.post.upsert({
+    where: { slug: 'news-post' },
+    update: {},
+    create: {
+      title: 'News Post',
+      slug: 'news-post',
+      thumbnail: '/images/thumnail/thumbnail-2.jpg',
+      description: 'This is a news post description.',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      userId: user.id, // Assuming user.id is the ID of the regular user
+    },
   });
 }
 

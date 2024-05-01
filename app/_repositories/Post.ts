@@ -23,4 +23,13 @@ export namespace PostRepository {
       },
     });
   }
+  //Đầu tiên tạo truy vấn trên Prisma để tạo một bài viết mới.
+  //Sau đó chuyển sang API để tạo một hàm tạo bài viết mới.
+  export async function create(post: Post) {
+    return await prisma.post.create({
+      data: {
+        ...post,
+      },
+    });
+  }
 }
