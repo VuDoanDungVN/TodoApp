@@ -36,7 +36,7 @@ export default function TrendingPost(props: Props) {
         <Grid container xs={12}>
           <Typography variant='h6'>Trending</Typography>
           <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px' }}>
-            {posts.slice(0, Math.ceil(posts.length / 3)).map((post) => (
+            {posts.map((post) => (
               <Grid item xs={3} key={post.id}>
                 <Paper sx={cssPaperCard} variant='outlined'>
                   <Grid container xs={12}>

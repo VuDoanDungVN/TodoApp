@@ -81,9 +81,11 @@ export default function CreatePost({ user, post }: Props) {
   return (
     <>
       {formData && (
-        <Grid container xs={12}>
-          <Typography variant='h6'>Edit Post</Typography>
-          <Grid item xs={12}>
+        <Grid container spacing={1}>
+          <Grid item xs={12} style={{ display: 'block', padding: '10px 20px' }}>
+            <Typography style={{ fontSize: '20px', margin: '10px 10px' }}>
+              Chỉnh sửa bài viết :
+            </Typography>
             <TextField
               id='title'
               name='title'
@@ -150,7 +152,7 @@ export default function CreatePost({ user, post }: Props) {
             <Button
               variant='contained'
               onClick={handleSubmit}
-              style={{ padding: '10px 10px', width: '300px' }}
+              style={{ margin: '10px 20px', width: '200px' }}
             >
               Sửa đổi
             </Button>
