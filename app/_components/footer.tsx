@@ -1,7 +1,6 @@
 'use client';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
-import Image from 'next/image';
 const Footer = () => {
   return (
     <footer>
@@ -16,8 +15,7 @@ const Footer = () => {
           style={{ position: 'absolute', bottom: 10, color: '' }}
         >
           © {new Date().getFullYear()} Github, Inc. Dung
-        </Link>{' '}
-        {'.'}
+        </Link>
       </Typography>
     </footer>
   );

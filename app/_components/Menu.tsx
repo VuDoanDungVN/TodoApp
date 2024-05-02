@@ -49,11 +49,11 @@ export default function NavbarMenu() {
       </ListItemButton>
       <Collapse in={open} timeout='auto' unmountOnExit>
         <List component='div' disablePadding>
-          <ListItemButton sx={{ pl: 3 }} href='/profile-user'>
+          <ListItemButton sx={{ pl: 3 }} href='/post-main'>
             <ListItemIcon>
               <PermContactCalendarIcon />
             </ListItemIcon>
-            <ListItemText primary='Profile' />
+            <ListItemText primary='Viết bài' />
           </ListItemButton>
         </List>
       </Collapse>

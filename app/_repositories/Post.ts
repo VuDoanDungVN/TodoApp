@@ -6,7 +6,6 @@ export type Post = Exclude<Prisma.PromiseReturnType<typeof PostRepository.findUn
 export namespace PostRepository {
   export async function findMany() {
     return await prisma.post.findMany({
-      take: 4,
       orderBy: {
         createdAt: 'desc',
       },
@@ -30,6 +29,16 @@ export namespace PostRepository {
       data: {
         ...post,
       },
+    });
+  }
+  export async function update(id: string, post: Post) {
+    const { updatedAt, ...postWithoutUpdatedAt } = post;
+    return await prisma.post.update({
+      where: {
+        id: id,
+        updatedAt: updatedAt,
+      },
+      data: postWithoutUpdatedAt,
     });
   }
 }

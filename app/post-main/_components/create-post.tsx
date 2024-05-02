@@ -1,5 +1,4 @@
 'use client';
-import { Categories } from '@/app/_repositories/Category';
 import {
   Box,
   FormControl,
@@ -9,41 +8,29 @@ import {
   Typography,
   MenuItem,
   Button,
-  SelectChangeEvent,
-  Alert,
-  AlertProps,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
-import { Post } from '@/app/_repositories/Post';
-import { useRouter } from 'next/navigation';
-import { useSession, signIn, signOut } from 'next-auth/react';
 import { User } from '@/app/_repositories/User';
-import { title } from 'process';
+import Alert from '@mui/material/Alert';
+import CheckIcon from '@mui/icons-material/Check';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 type Props = {
   user: User[];
 };
 
-interface PostObject {
-  title: string;
-  content: string;
-  description: string;
-  slug: string;
-  userId: string;
-  thumbnail: string;
-}
-
 export default function CreatePost(props: Props) {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     userId: '',
     description: '',
     slug: '',
-    thumbnail: '',
+    thumbnail: null as unknown as File | string,
   });
   const [users, setUsers] = useState(props.user);
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -83,6 +70,13 @@ export default function CreatePost(props: Props) {
   };
 
   const handleSubmit = async () => {
+    const formDataWithFile = new FormData();
+    formDataWithFile.append('title', formData.title);
+    formDataWithFile.append('content', formData.content);
+    formDataWithFile.append('userId', formData.userId);
+    formDataWithFile.append('description', formData.description);
+    formDataWithFile.append('slug', formData.slug);
+    formDataWithFile.append('thumbnail', formData.thumbnail);
     try {
       const response = await fetch('/api/post', {
         method: 'POST',
@@ -93,7 +87,9 @@ export default function CreatePost(props: Props) {
       });
 
       if (response.ok) {
-        console.log('Post created successfully');
+        setAlert(true);
+        console.log('Đã viết bài thành công!');
+        router.push('/home');
       } else {
         console.error('Failed to create post');
       }
@@ -101,6 +97,8 @@ export default function CreatePost(props: Props) {
       console.error('Error creating post:', error);
     }
   };
+
+  const [alert, setAlert] = useState(false);
 
   return (
     <Box>
@@ -110,33 +108,35 @@ export default function CreatePost(props: Props) {
             <Typography variant='h6'>Create Post</Typography>
           </Grid>
           {/* Thêm trường input file cho người dùng chọn ảnh */}
-          <Grid item xs={12}>
-            <input name='thumbnail' type='file' accept='thumnail/*' onChange={handleImageChange} />
-            {/* Hiển thị ảnh được chọn */}
-            {formData.thumbnail && (
-              <img
-                src={formData.thumbnail}
-                alt='Selected'
-                style={{ maxWidth: '10%', marginTop: '10px' }}
+          <Grid item xs={10}>
+            <Typography variant='h6'>Thêm ảnh thumnail :</Typography>
+            <input name='thumbnail' type='file' accept='image/*' onChange={handleImageChange} />
+            {formData.thumbnail instanceof File && (
+              <Image
+                src={URL.createObjectURL(formData.thumbnail)}
+                alt='image'
+                width={200}
+                height={200}
+                style={{ maxWidth: '100%', marginTop: '10px', margin: '10px' }}
               />
             )}
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={10}>
             <TextField
               id='title'
               name='title'
-              label='Title'
+              label='Tiêu đề'
               sx={{ m: 1, width: '100%' }}
               variant='outlined'
               value={formData.title}
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={10}>
             <TextField
               id='content'
               name='content'
-              label='Content'
+              label='Nội dung bài viết'
               multiline
               rows={4}
               sx={{ m: 1, width: '100%' }}
@@ -145,32 +145,37 @@ export default function CreatePost(props: Props) {
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={10}>
             <TextField
               id='description'
               name='description'
-              label='Description'
+              label='Mô tả bài viết'
               sx={{ m: 1, width: '100%' }}
               variant='outlined'
               value={formData.description}
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={10}>
             <TextField
               id='slug'
               name='slug'
-              label='Slug'
+              label='Đường dẫn link '
               sx={{ m: 1, width: '100%' }}
               variant='outlined'
               value={formData.slug}
               onChange={handleChange}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={10}>
             <FormControl>
-              <InputLabel>User</InputLabel>
-              <Select name='userId' value={formData.userId} onChange={handleChange}>
+              <InputLabel>Chọn tác giả :</InputLabel>
+              <Select
+                name='userId'
+                value={formData.userId}
+                onChange={handleChange}
+                sx={{ m: 1, width: '300px' }}
+              >
                 {users?.map((user) => (
                   <MenuItem key={user.id} value={user.id}>
                     {user.name}
@@ -179,13 +184,20 @@ export default function CreatePost(props: Props) {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={10}>
             <Button variant='contained' onClick={handleSubmit}>
               Create Post
             </Button>
           </Grid>
         </Grid>
       </form>
+      <Alert
+        icon={<CheckIcon fontSize='inherit' />}
+        severity='success'
+        style={{ display: alert ? 'block' : 'none' }}
+      >
+        Đã post bài viết lên trang chủ!
+      </Alert>
     </Box>
   );
 }

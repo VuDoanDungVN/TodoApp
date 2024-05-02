@@ -1,13 +1,12 @@
 import React from 'react';
-import CreatePost from './_components/create-post';
-import { UserRepository } from '../_repositories/User';
+import PostList from './_components/post-list';
+import { PostRepository } from '@/app/_repositories/Post';
 
 export default async function CreatePostPages() {
-  const user = await UserRepository.findMany();
-
+  const postList = await PostRepository.findMany();
   return (
-    <div>
-      <CreatePost user={user} />
-    </div>
+    <>
+      <PostList post={postList} />
+    </>
   );
 }
