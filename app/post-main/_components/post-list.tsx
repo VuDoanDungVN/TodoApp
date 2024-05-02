@@ -1,6 +1,16 @@
 'use client';
-import { Badge, Box, IconButton, Grid, Link, Paper, Typography } from '@mui/material';
-import * as React from 'react';
+import {
+  Badge,
+  Box,
+  IconButton,
+  Grid,
+  Link,
+  Paper,
+  Typography,
+  CircularProgress,
+  Fade,
+} from '@mui/material';
+import React, { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,19 +20,74 @@ import TableRow from '@mui/material/TableRow';
 import { Post } from '@/app/_repositories/Post';
 import EditIcon from '@mui/icons-material/Edit';
 import ClearIcon from '@mui/icons-material/Clear';
+import Alert from '@mui/material/Alert';
+import CheckIcon from '@mui/icons-material/Check';
+import { useRouter } from 'next/navigation';
+import TextIncreaseIcon from '@mui/icons-material/TextIncrease';
 type Props = {
   post: Post[];
 };
 
 export default function PostList(props: Props) {
+  const router = useRouter();
   const posts = props.post;
+  const [alert, setAlert] = useState(false);
+  const hanldDeletePost = async (id: string) => {
+    try {
+      const response = await fetch(`/api/post-delete/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete post');
+      }
+      setAlert(true);
+      router.refresh();
+      setTimeout(() => {
+        setAlert(false);
+      }, 3000);
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
+  };
+  // Tạo hiệu ứng khi xóa bài viết
+  const [query, setQuery] = React.useState('idle');
+  const timerRef = React.useRef<ReturnType<typeof setTimeout>>();
 
+  React.useEffect(
+    () => () => {
+      clearTimeout(timerRef.current);
+    },
+    [],
+  );
+
+  const handleClickQuery = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    if (query !== 'idle') {
+      setQuery('idle');
+      return;
+    }
+
+    setQuery('progress');
+    timerRef.current = setTimeout(() => {
+      setQuery('success');
+    }, 2000);
+  };
   return (
     <Box>
       <Grid container style={{ padding: '10px' }}>
-        <Typography variant='h6' style={{ margin: '10px 0px' }}>
-          Danh sách bài viết
-        </Typography>
+        <Grid item xs={12} style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography variant='h6' style={{ margin: '10px 0px' }}>
+            Danh sách bài viết
+          </Typography>
+          <Link href={'/post-main/post-create'}>
+            <IconButton>
+              <TextIncreaseIcon />
+            </IconButton>
+          </Link>
+        </Grid>
         <Grid item xs={12}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label='simple table'>
@@ -72,6 +137,7 @@ export default function PostList(props: Props) {
                     <TableCell style={{ height: '100px' }} align='right'>
                       {postList.likes}
                     </TableCell>
+
                     <TableCell style={{ width: '20px' }} align='right'>
                       <Link href={`/post-main/post-edit/${postList.id}`}>
                         <IconButton>
@@ -80,8 +146,8 @@ export default function PostList(props: Props) {
                       </Link>
                     </TableCell>
                     <TableCell style={{ width: '20px' }} align='right'>
-                      <IconButton>
-                        <ClearIcon />
+                      <IconButton onClick={() => hanldDeletePost(postList.id)}>
+                        <ClearIcon onClick={handleClickQuery} />
                       </IconButton>
                     </TableCell>
                   </TableRow>
@@ -89,6 +155,28 @@ export default function PostList(props: Props) {
               </TableBody>
             </Table>
           </TableContainer>
+        </Grid>
+        <Grid item xs={12} style={{ alignContent: 'center', alignItems: 'center' }}>
+          {query === 'success' ? (
+            <Alert
+              icon={<CheckIcon fontSize='inherit' />}
+              severity='success'
+              style={{ display: alert ? 'block' : 'none', width: '100%', margin: '10px 0px' }}
+            >
+              Đã xóa bài viết thành công!
+            </Alert>
+          ) : (
+            <Fade
+              in={query === 'progress'}
+              style={{
+                transitionDelay: query === 'progress' ? '800ms' : '0ms',
+                alignItems: 'center',
+              }}
+              unmountOnExit
+            >
+              <CircularProgress />
+            </Fade>
+          )}
         </Grid>
       </Grid>
     </Box>

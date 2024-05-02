@@ -3,7 +3,7 @@ import React from 'react';
 import { Post } from '@/app/_repositories/Post';
 import RecentPost from '@/app/post-main/_components/recent-post';
 import NewsPost from '@/app/post-main/_components/news';
-import TrendingPost from '@/app/post-main/_components/trending';
+import PostList from '@/app/post-main/_components/post-list';
 import { PostRepository } from '@/app/_repositories/Post';
 
 type Props = {
@@ -38,7 +38,7 @@ export default async function Home(props: Props) {
         </Grid>
         {/**Đây là phần hiển thị Post */}
         <Grid item xs={9}>
-          <TrendingPost posts={posts} />
+          <PostList post={posts} />
         </Grid>
       </Grid>
     </Box>
