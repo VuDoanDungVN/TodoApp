@@ -1,10 +1,11 @@
 import React from 'react';
 import Home from './_components/Home';
-
-export default function page() {
+import { PostRepository } from '@/app/_repositories/Post';
+export default async function page() {
+  const posts = await PostRepository.findMany();
   return (
     <div>
-      <Home />
+      <Home posts={posts} />
     </div>
   );
 }

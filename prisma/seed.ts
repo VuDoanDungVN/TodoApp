@@ -1,116 +1,131 @@
 import { PrismaClient } from '@prisma/client';
-
 const prisma = new PrismaClient();
 
 async function main() {
-  // Tạo các roles
-  const roleAdmin = await prisma.role.create({
-    data: {
-      name: 'admin',
-    },
+  // Seed roles
+  const adminRole = await prisma.role.upsert({
+    where: { name: 'Admin' },
+    update: {},
+    create: { name: 'Admin' },
   });
 
-  const roleUser = await prisma.role.create({
-    data: {
-      name: 'user',
-    },
+  const userRole = await prisma.role.upsert({
+    where: { name: 'User' },
+    update: {},
+    create: { name: 'User' },
   });
 
-  // Tạo các users
-  const user1 = await prisma.user.create({
-    data: {
-      name: 'Vũ Doãn Dũng',
+  // Seed users
+  const admin = await prisma.user.upsert({
+    where: { email: 'vudungit92@gmail.com' },
+    update: {},
+    create: {
       email: 'vudungit92@gmail.com',
       password: 'admin',
-      roleId: roleAdmin.id,
+      roleId: adminRole.id,
+      name: 'Vũ Dũng',
     },
   });
 
-  const user2 = await prisma.user.create({
-    data: {
-      name: 'Jane Doe',
-      email: 'jane@example.com',
-      password: 'password456',
-      roleId: roleUser.id,
+  const user = await prisma.user.upsert({
+    where: { email: 'user@example.com' },
+    update: {},
+    create: {
+      email: 'user@example.com',
+      password: 'userpassword',
+      roleId: userRole.id,
+      name: 'Regular User',
     },
   });
 
-  // Tạo các accounts
-  await prisma.account.createMany({
-    data: [
-      {
-        userId: user1.id,
-        providerType: 'email',
-        providerId: 'john@example.com',
-        providerAccountId: 'john123',
-      },
-      {
-        userId: user2.id,
-        providerType: 'email',
-        providerId: 'jane@example.com',
-        providerAccountId: 'jane456',
-      },
-    ],
-  });
-
-  // Tạo các sessions
-  await prisma.session.createMany({
-    data: [
-      {
-        userId: user1.id,
-        expires: new Date(),
-        sessionToken: 'sessionToken1',
-        accessToken: 'accessToken1',
-      },
-      {
-        userId: user2.id,
-        expires: new Date(),
-        sessionToken: 'sessionToken2',
-        accessToken: 'accessToken2',
-      },
-    ],
-  });
-
-  // Tạo các thông tin cá nhân
-  const personalInfo1 = await prisma.personalInformation.create({
-    data: {
-      userId: user1.id,
-      phoneNumber: '123456789',
-      bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  // Seed personal information
+  await prisma.personalInformation.upsert({
+    where: { userId: admin.id },
+    update: {},
+    create: {
+      userId: admin.id,
+      phoneNumber: '1234567890',
+      bio: 'I am the admin user.',
     },
   });
 
-  const personalInfo2 = await prisma.personalInformation.create({
-    data: {
-      userId: user2.id,
-      phoneNumber: '987654321',
-      bio: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  await prisma.personalInformation.upsert({
+    where: { userId: user.id },
+    update: {},
+    create: {
+      userId: user.id,
+      phoneNumber: '0987654321',
+      bio: 'I am a regular user.',
     },
   });
 
-  // Tạo địa chỉ
-  const address1 = await prisma.address.create({
-    data: {
-      userId: user1.id,
-      address: '123 Main St, City',
+  // Seed addresses
+  await prisma.address.upsert({
+    where: { userId: admin.id },
+    update: {},
+    create: {
+      userId: admin.id,
+      address: '123 Admin Street, City, Country',
     },
   });
 
-  const address2 = await prisma.address.create({
-    data: {
-      userId: user2.id,
-      address: '456 Elm St, Town',
+  await prisma.address.upsert({
+    where: { userId: user.id },
+    update: {},
+    create: {
+      userId: user.id,
+      address: '456 User Avenue, City, Country',
     },
   });
 
-  console.log('Seed data generated successfully!');
+  // Seed categories
+  const categoryTech = await prisma.category.upsert({
+    where: { id: '1', name: 'Technology', slug: 'technology' },
+    update: {},
+    create: {
+      name: 'Technology',
+      slug: 'technology',
+    },
+  });
+
+  const categoryNews = await prisma.category.upsert({
+    where: { id: '2', name: 'News', slug: 'news' },
+    update: {},
+    create: {
+      name: 'News',
+      slug: 'news',
+    },
+  });
+  // Seed posts
+  const post1 = await prisma.post.upsert({
+    where: { slug: 'technology-post' },
+    update: {},
+    create: {
+      title: 'Technology Post',
+      slug: 'technology-post',
+      thumbnail: '/images/thumnail/thumbnail-1.jpg',
+      description: 'This is a technology post description.',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      userId: admin.id, // Assuming admin.id is the ID of the admin user
+    },
+  });
+
+  const post2 = await prisma.post.upsert({
+    where: { slug: 'news-post' },
+    update: {},
+    create: {
+      title: 'News Post',
+      slug: 'news-post',
+      thumbnail: '/images/thumnail/thumbnail-2.jpg',
+      description: 'This is a news post description.',
+      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+      userId: user.id, // Assuming user.id is the ID of the regular user
+    },
+  });
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
+  .catch(console.error)
   .finally(async () => {
     await prisma.$disconnect();
   });

@@ -7,21 +7,17 @@ import Box from '@mui/material/Box';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Container from '@mui/material/Container';
 import Image from 'next/image';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import 'dayjs/locale/ja';
 import { SessionProvider } from 'next-auth/react';
 import MainMenu from '@/app/_components/Menu';
 import AccountInfo from './AccountInfo';
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Footer from './footer';
@@ -165,7 +161,6 @@ export default function Layout({ children }: LayoutProps) {
               Bạn cần phải đăng nhập để sử dụng chức năng này!
             </Alert>
           )}
-          <Footer />
         </Box>
       </Box>
     </ThemeProvider>
