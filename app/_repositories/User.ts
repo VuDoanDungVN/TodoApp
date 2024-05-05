@@ -16,7 +16,7 @@ export namespace UserRepository {
     return await prisma.user.findMany({
       include: {
         role: true,
-        PersonalInformation: true,
+        personalInformation: true,
         address: true,
         posts: true,
       },
@@ -35,7 +35,7 @@ export namespace UserRepository {
     return await prisma.user.findUnique({
       include: {
         role: true,
-        PersonalInformation: true,
+        personalInformation: true,
         address: true,
         posts: true,
       },

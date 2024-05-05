@@ -15,16 +15,12 @@ export namespace RoleRepository {
 
   export async function findUnique(id: string) {
     return await prisma.role.findUnique({
+      include: {
+        users: true,
+      },
       where: {
         id: id,
       },
     });
-  }
-
-  export async function create(role: Role) {
-    const createdRole = await prisma.role.create({
-      data: role,
-    });
-    return createdRole;
   }
 }

@@ -57,6 +57,14 @@ export default function NavbarMenu() {
           </ListItemButton>
         </List>
       </Collapse>
+      <List component='div' disablePadding>
+        <ListItemButton sx={{ pl: 3 }} href='/user'>
+          <ListItemIcon>
+            <PermContactCalendarIcon />
+          </ListItemIcon>
+          <ListItemText primary='User' />
+        </ListItemButton>
+      </List>
     </List>
   );
 }

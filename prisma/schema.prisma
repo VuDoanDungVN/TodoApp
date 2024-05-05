@@ -60,7 +60,7 @@ model User {
   accounts            Account[]
   sessions            Session[]
   role                Role                 @relation(fields: [roleId], references: [id])
-  PersonalInformation PersonalInformation?
+  personalInformation PersonalInformation?
   address             Address?
   posts               Post[]
 }
