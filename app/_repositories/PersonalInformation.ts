@@ -12,6 +12,9 @@ export namespace PersonalInformationRepository {
       include: {
         user: true,
       },
+      orderBy: {
+        id: 'asc',
+      },
     });
   }
 

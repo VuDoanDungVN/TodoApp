@@ -4,11 +4,7 @@ import type { NextRequest } from 'next/server';
 import type { User } from '@/app/_repositories/User';
 import { UserRepository } from '@/app/_repositories/User';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
-  const user = await UserRepository.findUnique(params.id);
-  return NextResponse.json(user);
-}
-
+//Hàm PUT này để cập nhật thông tin của user
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const user: User = await request.json();
@@ -19,7 +15,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
-
+//Hàm DELETE này để xóa một user
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const deletedUser = await UserRepository.remove(params.id);

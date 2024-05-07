@@ -4,11 +4,7 @@ import type { NextRequest } from 'next/server';
 import type { User } from '@/app/_repositories/User';
 import { UserRepository } from '@/app/_repositories/User';
 
-export async function GET(request: NextRequest) {
-  const users = await UserRepository.findMany();
-  return NextResponse.json(users);
-}
-
+//Hàm Post này để tạo mới một user
 export async function POST(request: NextRequest) {
   try {
     const user: User = await request.json();
