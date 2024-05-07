@@ -1,29 +1,26 @@
 'use client';
-import { Address } from '@/app/_repositories/Address';
 import { PersonalInformation } from '@/app/_repositories/PersonalInformation';
 import { Role } from '@/app/_repositories/Role';
-import {
-  Box,
-  Button,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-} from '@mui/material';
-import React from 'react';
+import { User } from '@/app/_repositories/User';
+import { Box, Button, Grid, MenuItem, Select, TextField } from '@mui/material';
+import React, { useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 type Props = {
-  personal: PersonalInformation[];
-  role: Role[];
+  personal: PersonalInformation[]; //Khi tạo mới user thì truyền vào dạng mảng để hiển thị danh sách personal để chọn
+  role: Role[]; //Khi tạo mới user thì truyền vào dạng mảng để hiển thị danh sách role để chọn
+  user: User | null; //Khi sửa user thì truyền vào như trên không thể để dạng mảng vì chỉ sửa một user.
+  //Khi sửa user thì truyền vào user cần sửa để hiển thị dữ liệu cũ của user đó
+  //Khi tạo mới user thì truyền vào null để hiển thị form rỗng để tạo mới user đó
+  //Khi truyền vào user thì sẽ hiển thị dữ liệu cũ của user đó để sửa thông tin
 };
 
-export default function CreateUser(props: Props) {
+export default function EditUser(props: Props) {
   const router = useRouter();
-  const personals = props.personal;
-  const roles = props.role;
+  const personals = props.personal; //Danh sách personal
+  const roles = props.role; //Danh sách role
+  const users = props.user; //User cần sửa
 
+  //State này để lưu trữ thông tin của user cần sửa hoặc tạo mới
   const [fromDataUser, setFormDataUser] = React.useState({
     name: '',
     firstName: '',
@@ -33,25 +30,51 @@ export default function CreateUser(props: Props) {
     roleId: '',
     personalInformationId: '',
   });
+  //Hàm useEffect này để lấy ra thông tin của user cần sửa và hiển thị lên form để sửa
+  useEffect(() => {
+    //Hàm này chạy khi component được render
+    if (users) {
+      //Nếu users tồn tại thì set giá trị của user cần sửa vào state fromDataUser
+      setFormDataUser((prevData) => ({
+        //Set giá trị của user cần sửa vào state fromDataUser
+        ...prevData, //Giữ nguyên giá trị cũ của state fromDataUser
+        name: users.name || '', //Set giá trị của user cần sửa vào state fromDataUser
+        firstName: users.firstName || '',
+        lastName: users.lastName || '',
+        email: users.email || '',
+        password: users.password || '',
+        roleId: users.roleId || '',
+        personalInformationId: users.personalInformationId || '',
+      }));
+    }
+  }, [users]); //Khi users thay đổi thì chạy lại hàm useEffect này
+
+  //Hàm này để xử lý sự kiện thay đổi giá trị của input trong form và cập nhật vào state fromDataUser
+  //Khi thay đổi giá trị của input thì cập nhật giá trị mới vào state fromDataUser
   const hanldChange = (e: any) => {
+    //Hàm này để xử lý sự kiện thay đổi giá trị của input trong form
     setFormDataUser({
-      ...fromDataUser,
-      [e.target.name]: e.target.value,
+      //Set giá trị mới vào state fromDataUser
+      ...fromDataUser, //Giữ nguyên giá trị cũ của state fromDataUser
+      [e.target.name]: e.target.value, //Set giá trị mới của input vào state fromDataUser
     });
   };
+  //Hàm này để xử lý sự kiện khi click vào nút submit form
+  //Khi click vào nút submit form thì gửi dữ liệu từ state fromDataUser lên server để cập nhật thông tin user
   const handleSubmit = async () => {
     try {
-      const response = await fetch('/api/user', {
-        method: 'POST',
+      const response = await fetch(`/api/user/${users?.id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(fromDataUser),
       });
       if (!response.ok) {
+        console.log('Đang cập nhật user');
         throw new Error('Failed to create user');
       }
-      alert('Create user success');
+      alert('Tạo user thành công');
       router.push('/user');
     } catch (error) {
       console.error('Error creating user:', error);
@@ -134,14 +157,14 @@ export default function CreateUser(props: Props) {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <label htmlFor='personals'>Personnal</label>
+                  <label htmlFor='personalInformationId'>Personnal</label>
                   <Select
                     name='personalInformationId'
                     fullWidth
                     onChange={hanldChange}
                     value={fromDataUser.personalInformationId}
                   >
-                    {personals?.map((personal) => (
+                    {personals.map((personal) => (
                       <MenuItem key={personal.id} value={personal.id}>
                         {personal.bio}
                       </MenuItem>
@@ -165,7 +188,7 @@ export default function CreateUser(props: Props) {
                 </Grid>
                 <Grid item xs={12}>
                   <Button variant='outlined' onClick={handleSubmit}>
-                    Đăng ký
+                    Sửa User
                   </Button>
                 </Grid>
               </Grid>

@@ -1,6 +1,7 @@
 import { prisma } from '@/app/_utils/prismaSingleton';
 import type { Prisma } from '@prisma/client';
 import type { User as _User } from '@prisma/client';
+import { PersonalInformation } from './PersonalInformation';
 
 //Hàm này để lấy ra thông tin của user
 export type User = _User;
@@ -45,10 +46,22 @@ export namespace UserRepository {
     });
   }
   //Hàm này để tạo mới một tài khoản
-  export async function create(user: User) {
-    return await prisma.user.create({
+  export async function create(user: User, personalInfo: PersonalInformation) {
+    // Tạo mới User
+    const createdUser = await prisma.user.create({
       data: user,
     });
+
+    // Liên kết User với PersonalInformation
+    await prisma.personalInformation.create({
+      data: {
+        ...personalInfo,
+        userId: createdUser.id, // Sử dụng id của User mới tạo
+      },
+    });
+
+    // Trả về User mới đã tạo
+    return createdUser;
   }
 
   //Hàm này để cập nhật thông tin của một tài khoản

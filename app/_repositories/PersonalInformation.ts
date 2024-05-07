@@ -8,7 +8,14 @@ export type PersonalInformation = Exclude<
 
 export namespace PersonalInformationRepository {
   export async function findMany() {
-    return await prisma.personalInformation.findMany();
+    return await prisma.personalInformation.findMany({
+      include: {
+        user: true,
+      },
+      orderBy: {
+        id: 'asc',
+      },
+    });
   }
 
   export async function findUnique(id: string) {
