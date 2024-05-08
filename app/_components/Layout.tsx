@@ -102,7 +102,7 @@ export default function Layout({ children }: LayoutProps) {
 
         {/* AppBar */}
         <AppBar position='absolute' open={open}>
-          <Toolbar>
+          <Toolbar style={{ borderBottom: '0.5px solid #ccc' }}>
             {/* Menu Icon */}
             <IconButton
               edge='start'
@@ -110,7 +110,6 @@ export default function Layout({ children }: LayoutProps) {
               aria-label='open drawer'
               onClick={toggleDrawer}
               sx={{
-                marginRight: '36px',
                 ...(open && { display: 'none' }),
               }}
             >
@@ -140,7 +139,6 @@ export default function Layout({ children }: LayoutProps) {
             </Grid>
           </Toolbar>
           {/**Dấu gạch ở menu */}
-          <Divider style={{ color: '#ccc' }} />
           {/* Main Menu */}
           <List component='nav' style={{ height: '100vh' }}>
             <MainMenu />

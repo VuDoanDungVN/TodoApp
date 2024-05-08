@@ -50,6 +50,9 @@ export namespace UserRepository {
     // Tạo mới User
     const createdUser = await prisma.user.create({
       data: user,
+      include: {
+        personalInformation: true,
+      },
     });
 
     // Liên kết User với PersonalInformation

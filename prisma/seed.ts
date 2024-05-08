@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -44,8 +45,8 @@ async function main() {
     update: {},
     create: {
       userId: admin.id,
-      phoneNumber: '1234567890',
-      bio: 'I am the admin user.',
+      phoneNumber: '0123456789',
+      bio: 'I am an admin user.',
     },
   });
 
@@ -96,6 +97,7 @@ async function main() {
       slug: 'news',
     },
   });
+
   // Seed posts
   const post1 = await prisma.post.upsert({
     where: { slug: 'technology-post' },

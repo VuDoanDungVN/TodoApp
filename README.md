@@ -22,3 +22,13 @@ schema.prisma に model を追加・変更等した場合は<br>
 powershell<br>
 npx prisma migrate dev --name <マイグレーションに名前を付ける><br>
 npx prisma generate<br>
+
+npm install --save @prisma/client<br>
+npm install --save-dev prisma ts-node<br>
+
+npx prisma migrate dev --name init<br>
+npx tsx prisma/seed-dev.ts<br>
+
+git merge origin main<br>
+npx prisma generate<br>
+npm run build<br>

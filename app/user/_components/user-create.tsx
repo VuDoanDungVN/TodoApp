@@ -31,7 +31,6 @@ export default function CreateUser(props: Props) {
     email: '',
     password: '',
     roleId: '',
-    personalInformationId: '',
   });
   const hanldChange = (e: any) => {
     setFormDataUser({
@@ -132,21 +131,6 @@ export default function CreateUser(props: Props) {
                     value={fromDataUser.password}
                     onChange={hanldChange}
                   />
-                </Grid>
-                <Grid item xs={12}>
-                  <label htmlFor='personals'>Personnal</label>
-                  <Select
-                    name='personalInformationId'
-                    fullWidth
-                    onChange={hanldChange}
-                    value={fromDataUser.personalInformationId}
-                  >
-                    {personals?.map((personal) => (
-                      <MenuItem key={personal.id} value={personal.id}>
-                        {personal.bio}
-                      </MenuItem>
-                    ))}
-                  </Select>
                 </Grid>
                 <Grid item xs={12}>
                   <label htmlFor='role'>Role</label>

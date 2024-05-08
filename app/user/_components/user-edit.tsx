@@ -28,7 +28,6 @@ export default function EditUser(props: Props) {
     email: '',
     password: '',
     roleId: '',
-    personalInformationId: '',
   });
   //Hàm useEffect này để lấy ra thông tin của user cần sửa và hiển thị lên form để sửa
   useEffect(() => {
@@ -44,7 +43,6 @@ export default function EditUser(props: Props) {
         email: users.email || '',
         password: users.password || '',
         roleId: users.roleId || '',
-        personalInformationId: users.personalInformationId || '',
       }));
     }
   }, [users]); //Khi users thay đổi thì chạy lại hàm useEffect này
@@ -155,21 +153,6 @@ export default function EditUser(props: Props) {
                     value={fromDataUser.password}
                     onChange={hanldChange}
                   />
-                </Grid>
-                <Grid item xs={12}>
-                  <label htmlFor='personalInformationId'>Personnal</label>
-                  <Select
-                    name='personalInformationId'
-                    fullWidth
-                    onChange={hanldChange}
-                    value={fromDataUser.personalInformationId}
-                  >
-                    {personals.map((personal) => (
-                      <MenuItem key={personal.id} value={personal.id}>
-                        {personal.bio}
-                      </MenuItem>
-                    ))}
-                  </Select>
                 </Grid>
                 <Grid item xs={12}>
                   <label htmlFor='role'>Role</label>

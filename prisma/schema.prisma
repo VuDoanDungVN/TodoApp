@@ -46,33 +46,33 @@ model Session {
 }
 
 model User {
-  id                    String               @id @default(cuid())
-  name                  String?
-  firstName             String?
-  lastName              String?
-  email                 String               @unique
-  emailVerified         DateTime?
-  image                 String?
-  createdAt             DateTime             @default(now())
-  updatedAt             DateTime             @updatedAt
-  password              String
-  roleId                String
-  accounts              Account[]
-  sessions              Session[]
-  role                  Role                 @relation(fields: [roleId], references: [id])
-  personalInformationId String?
-  personalInformation   PersonalInformation? @relation(fields: [personalInformationId], references: [id])
-  address               Address?
-  posts                 Post[]
+  id                  String               @id @default(cuid())
+  name                String?
+  firstName           String?
+  lastName            String?
+  email               String               @unique
+  emailVerified       DateTime?
+  image               String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  password            String
+  roleId              String
+  accounts            Account[]
+  sessions            Session[]
+  role                Role                 @relation(fields: [roleId], references: [id])
+  personalInformation PersonalInformation?
+  address             Address?
+  posts               Post[]
 }
 
 model PersonalInformation {
   id          String    @id @default(cuid())
   phoneNumber String?
   bio         String?
+  userId      String    @unique
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  user        User[]
+  user        User      @relation(fields: [userId], references: [id])
   sessions    Session[]
 }
 
