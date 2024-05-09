@@ -12,9 +12,9 @@ import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Tooltip from '@mui/material/Tooltip';
 import Link from '@mui/material/Link';
-
+import SettingsIcon from '@mui/icons-material/Settings';
 const AccountInfo = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -34,7 +34,7 @@ const AccountInfo = () => {
     <>
       <Box style={{ width: '100%' }}>
         <Grid container spacing={1}>
-          <Grid
+          {/* <Grid
             item
             xs={7}
             sx={{ flex: '1', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
@@ -47,12 +47,25 @@ const AccountInfo = () => {
               </Link>
               <Typography color='black'>Trang chủ</Typography>
             </Breadcrumbs>
-          </Grid>
+          </Grid> */}
+
           <Grid
-            xs={5}
+            xs={12}
             item
             sx={{ flex: '1', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}
           >
+            <Tooltip title='Cài đặt'>
+              <IconButton>
+                <SettingsIcon style={{ color: '#ccc' }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title='Thông báo'>
+              <IconButton>
+                <Badge badgeContent={2} color='error'>
+                  <NotificationsIcon style={{ color: '#ccc' }} />
+                </Badge>
+              </IconButton>
+            </Tooltip>
             {session ? (
               <Stack direction='row' spacing={2}>
                 <IconButton
@@ -62,7 +75,11 @@ const AccountInfo = () => {
                   aria-expanded={open ? 'true' : undefined}
                   onClick={handleClick}
                 >
-                  <Avatar alt='Vu dung' src='/images/img/user.jpg' />
+                  {session?.user.image ? (
+                    <Avatar alt='User name' src={session?.user.image} />
+                  ) : (
+                    <Avatar alt={session?.user.name || 'User name'} />
+                  )}
                 </IconButton>
 
                 <Menu
@@ -97,11 +114,6 @@ const AccountInfo = () => {
                 </Link>
               </MenuItem>
             )}
-            <IconButton color='inherit'>
-              <Badge badgeContent={2} color='error'>
-                <NotificationsIcon style={{ color: '#ccc' }} />
-              </Badge>
-            </IconButton>
           </Grid>
         </Grid>
       </Box>

@@ -127,8 +127,16 @@ export default function Layout({ children }: LayoutProps) {
           <Toolbar>
             <Grid container spacing={0}>
               {/* Logo */}
-              <Grid item xs={6}>
-                <Image src='/logo.png' alt='Logo' width={100} height={40} />
+              <Grid
+                item
+                xs={6}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Image src='/chat-logo.png' alt='Logo' width={100} height={40} />
               </Grid>
               <Grid item xs={6} style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 {/* Close Drawer Icon */}

@@ -16,30 +16,34 @@ import InputBase from '@mui/material/InputBase';
 import Divider from '@mui/material/Divider';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import PersonIcon from '@mui/icons-material/Person';
-
+import LockIcon from '@mui/icons-material/Lock';
 //CSS
 const cssBody = { backgroundColor: '#fff' };
-const cssCenter = { display: 'flex', alignItems: 'center', justifyContent: 'center', pb: 2 };
+const cssCenter = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '15px 15px 0px 0px',
+};
 const cssButton = { display: 'flex', alignItems: 'center', justifyContent: 'center', pb: 2, mt: 2 };
 const cssContainer = { height: { sm: 'auto', md: '100vh' } };
 const cssBoxCenter = { justifyContent: 'center', alignItems: 'center', margin: '0 auto' };
-const font16 = { fontSize: 16, color: '#325381' };
-const cssIcon = { m: 2, color: '#98A9C0' };
+const font16 = { fontSize: 16, color: '#325381', marginBottom: '10px' };
+const cssIcon = { m: 2, color: '#98A9C0', fontSize: 30 };
 
 const cssBoxLogin = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
   backgroundColor: '#F4F4F4',
-  p: '20px;',
   borderRadius: 4,
   border: '1px solid #D4D4D4',
-  maxWidth: '450px',
+  maxWidth: '500px',
   margin: '0 auto',
 };
 
 const cssBackgroundImage = {
-  backgroundImage: `url('/images/background.png')`, // Thay đường dẫn tới ảnh của bạn ở đây
+  backgroundImage: `url('/images/ana.png')`, // Thay đường dẫn tới ảnh của bạn ở đây
   backgroundSize: 'full',
   backgroundPosition: 'center',
 };
@@ -64,7 +68,7 @@ const SignIn = () => {
       });
 
       if (result?.error) {
-        setError('Sai Id hoặc mật khẩu!');
+        setError('ID社員番号またはパスワードが正しくありません。');
       } else {
         router.refresh();
         router.push(callbackUrl);
@@ -80,48 +84,32 @@ const SignIn = () => {
         <form noValidate>
           <Grid container alignItems='center' sx={cssContainer}>
             <Box sx={cssBoxCenter}>
-              <Grid
-                item
-                xs={12}
-                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              >
-                <Image src='/logoLogin.png' alt='Logo' width={300} height={125} />
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              >
-                <Typography
-                  variant='h5'
-                  sx={{ color: '#fff', fontWeight: '800', fontSize: '30px' }}
-                >
-                  Wellcome to Website
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              >
-                <Typography variant='h5' sx={{ color: '#fff', margin: '20px 0px 10px 0px' }}>
-                  Login to your account
-                </Typography>
-              </Grid>
               <Box sx={cssBoxLogin}>
                 <Grid item xs={12}>
-                  <Grid container spacing={2}>
+                  <Grid item xs={12} sx={cssCenter}>
+                    <Image
+                      src='/images/bg.png'
+                      alt='logo'
+                      width={510}
+                      height={250}
+                      style={cssCenter}
+                    />
+                  </Grid>
+                  <Grid container spacing={2} style={{ padding: 20 }}>
                     <Grid item xs={12} sx={{ height: 50, mb: 1 }}>
-                      {error && <Alert severity='error'>{error}</Alert>}
+                      <Typography variant='h5' sx={{ color: '#325381', textAlign: 'center' }}>
+                        ユーザーログイン
+                      </Typography>
                     </Grid>
-
                     <Grid item xs={12}>
                       <FormLabel id='email'>
-                        <Typography sx={font16}>Email :</Typography>
+                        <Typography sx={font16} style={{ marginBottom: '10px' }}>
+                          社員番号 :
+                        </Typography>
                       </FormLabel>
                       <Paper sx={{ display: 'flex', alignItems: 'center' }}>
                         <PersonIcon sx={cssIcon} />
-                        <Divider orientation='vertical' flexItem />
+                        {/* <Divider orientation='vertical' flexItem /> */}
                         <InputBase
                           sx={{ ml: 1, flex: 1, p: 1 }}
                           id='email'
@@ -140,11 +128,11 @@ const SignIn = () => {
                     </Grid>
                     <Grid item xs={12}>
                       <FormLabel id='email'>
-                        <Typography sx={font16}>Mật khẩu :</Typography>
+                        <Typography sx={font16}>パスワード :</Typography>
                       </FormLabel>
                       <Paper sx={{ display: 'flex', alignItems: 'center' }}>
-                        <FingerprintIcon sx={cssIcon} />
-                        <Divider orientation='vertical' flexItem />
+                        <LockIcon sx={cssIcon} />
+                        {/* <Divider orientation='vertical' flexItem /> */}
                         <InputBase
                           sx={{ ml: 1, flex: 1, p: 1 }}
                           id='password'
@@ -171,10 +159,13 @@ const SignIn = () => {
                       <Button
                         variant='contained'
                         onClick={onSubmit}
-                        sx={{ backgroundColor: '#325381' }}
+                        sx={{ backgroundColor: '#325381', padding: '10px 50px' }}
                       >
-                        Đăng nhập
+                        ログイン
                       </Button>
+                    </Grid>
+                    <Grid item xs={12} sx={{ height: 50, mb: 1 }}>
+                      {error && <Alert severity='error'>{error}</Alert>}
                     </Grid>
                   </Grid>
                 </Grid>
