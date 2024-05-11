@@ -98,8 +98,6 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex', width: '100%' }}>
-        <CssBaseline />
-
         {/* AppBar */}
         <AppBar position='absolute' open={open}>
           <Toolbar style={{ borderBottom: '0.5px solid #ccc' }}>
@@ -136,7 +134,13 @@ export default function Layout({ children }: LayoutProps) {
                   alignItems: 'center',
                 }}
               >
-                <Image src='/chat-logo.png' alt='Logo' width={100} height={40} />
+                <Image
+                  src='/chat-logo.png'
+                  alt='Logo'
+                  width={100}
+                  height={40}
+                  style={{ marginLeft: 60 }}
+                />
               </Grid>
               <Grid item xs={6} style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 {/* Close Drawer Icon */}

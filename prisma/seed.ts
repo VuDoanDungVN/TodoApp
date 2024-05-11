@@ -25,6 +25,7 @@ async function main() {
       password: 'admin',
       roleId: adminRole.id,
       name: 'Vũ Dũng',
+      image: '/images/user.png',
     },
   });
 
@@ -97,7 +98,6 @@ async function main() {
       slug: 'news',
     },
   });
-
   // Seed posts
   const post1 = await prisma.post.upsert({
     where: { slug: 'technology-post' },
@@ -105,7 +105,7 @@ async function main() {
     create: {
       title: 'Technology Post',
       slug: 'technology-post',
-      thumbnail: '/images/thumnail/thumbnail-1.jpg',
+      thumbnail: '/images/thumnail/thumnail-1.jpg',
       description: 'This is a technology post description.',
       content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       userId: admin.id, // Assuming admin.id is the ID of the admin user
@@ -118,7 +118,7 @@ async function main() {
     create: {
       title: 'News Post',
       slug: 'news-post',
-      thumbnail: '/images/thumnail/thumbnail-2.jpg',
+      thumbnail: '/images/thumnail/thumnail-2.jpg',
       description: 'This is a news post description.',
       content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
       userId: user.id, // Assuming user.id is the ID of the regular user

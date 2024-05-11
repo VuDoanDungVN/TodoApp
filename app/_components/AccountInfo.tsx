@@ -76,7 +76,11 @@ const AccountInfo = () => {
                   onClick={handleClick}
                 >
                   {session?.user.image ? (
-                    <Avatar alt='User name' src={session?.user.image} />
+                    <Avatar
+                      alt='User name'
+                      src={session?.user.image}
+                      style={{ width: 30, height: 30, color: '#cccccc' }}
+                    />
                   ) : (
                     <Avatar alt={session?.user.name || 'User name'} />
                   )}
