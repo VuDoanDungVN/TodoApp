@@ -76,7 +76,7 @@ export default function CreatePost(props: Props) {
     formDataWithFile.append('userId', formData.userId);
     formDataWithFile.append('description', formData.description);
     formDataWithFile.append('slug', formData.slug);
-    formDataWithFile.append('thumbnail', formData.thumbnail);
+    formDataWithFile.append('thumbnail', formData.thumbnail as File);
     try {
       const response = await fetch('/api/post', {
         method: 'POST',

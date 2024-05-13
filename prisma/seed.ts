@@ -3,131 +3,180 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Seed roles
-  const adminRole = await prisma.role.upsert({
-    where: { name: 'Admin' },
-    update: {},
-    create: { name: 'Admin' },
+  // Tạo dữ liệu cho mô hình Role
+  const adminRole = await prisma.role.create({
+    data: {
+      name: 'admin',
+    },
   });
 
-  const userRole = await prisma.role.upsert({
-    where: { name: 'User' },
-    update: {},
-    create: { name: 'User' },
+  const userRole = await prisma.role.create({
+    data: {
+      name: 'user',
+    },
   });
 
-  // Seed users
-  const admin = await prisma.user.upsert({
-    where: { email: 'vudungit92@gmail.com' },
-    update: {},
-    create: {
+  // Tạo dữ liệu cho mô hình User
+  const user1 = await prisma.user.create({
+    data: {
+      name: 'Vũ Dũng',
       email: 'vudungit92@gmail.com',
       password: 'admin',
-      roleId: adminRole.id,
-      name: 'Vũ Dũng',
-      image: '/images/user.png',
-    },
-  });
-
-  const user = await prisma.user.upsert({
-    where: { email: 'user@example.com' },
-    update: {},
-    create: {
-      email: 'user@example.com',
-      password: 'userpassword',
       roleId: userRole.id,
-      name: 'Regular User',
     },
   });
 
-  // Seed personal information
-  await prisma.personalInformation.upsert({
-    where: { userId: admin.id },
-    update: {},
-    create: {
-      userId: admin.id,
-      phoneNumber: '0123456789',
-      bio: 'I am an admin user.',
+  const user2 = await prisma.user.create({
+    data: {
+      name: 'Jane Smith',
+      email: 'jane@example.com',
+      password: 'password456',
+      roleId: userRole.id,
     },
   });
 
-  await prisma.personalInformation.upsert({
-    where: { userId: user.id },
-    update: {},
-    create: {
-      userId: user.id,
-      phoneNumber: '0987654321',
-      bio: 'I am a regular user.',
+  // Tạo dữ liệu cho mô hình Account
+  await prisma.account.createMany({
+    data: [
+      {
+        userId: user1.id,
+        providerType: 'email',
+        providerId: 'vudungit92@gmail.com',
+        providerAccountId: 'vudungit92@gmail.com',
+      },
+      {
+        userId: user2.id,
+        providerType: 'email',
+        providerId: 'jane@example.com',
+        providerAccountId: 'jane@example.com',
+      },
+    ],
+  });
+
+  // Tạo dữ liệu cho mô hình PersonalInformation
+  const personalInfo1 = await prisma.personalInformation.create({
+    data: {
+      phoneNumber: '123456789',
+      bio: 'I love coding!',
+      userId: user1.id,
     },
   });
 
-  // Seed addresses
-  await prisma.address.upsert({
-    where: { userId: admin.id },
-    update: {},
-    create: {
-      userId: admin.id,
-      address: '123 Admin Street, City, Country',
+  const personalInfo2 = await prisma.personalInformation.create({
+    data: {
+      phoneNumber: '987654321',
+      bio: 'I love reading!',
+      userId: user2.id,
     },
   });
 
-  await prisma.address.upsert({
-    where: { userId: user.id },
-    update: {},
-    create: {
-      userId: user.id,
-      address: '456 User Avenue, City, Country',
+  // Tạo dữ liệu cho mô hình Address
+  const address1 = await prisma.address.create({
+    data: {
+      userId: user1.id,
+      address: '123 Main Street',
     },
   });
 
-  // Seed categories
-  const categoryTech = await prisma.category.upsert({
-    where: { id: '1', name: 'Technology', slug: 'technology' },
-    update: {},
-    create: {
+  const address2 = await prisma.address.create({
+    data: {
+      userId: user2.id,
+      address: '456 Elm Street',
+    },
+  });
+
+  // Tạo dữ liệu cho mô hình Session
+  const session1 = await prisma.session.create({
+    data: {
+      userId: user1.id,
+      expires: new Date(),
+      sessionToken: 'session_token_1',
+      accessToken: 'access_token_1',
+    },
+  });
+
+  const session2 = await prisma.session.create({
+    data: {
+      userId: user2.id,
+      expires: new Date(),
+      sessionToken: 'session_token_2',
+      accessToken: 'access_token_2',
+    },
+  });
+
+  // Tạo dữ liệu cho mô hình Post
+  const post1 = await prisma.post.create({
+    data: {
+      title: 'First Post',
+      slug: 'first-post',
+      thumbnail: 'https://example.com/thumbnail.jpg',
+      description: 'This is the first post',
+      content: 'Lorem ipsum dolor sit amet...',
+      userId: user1.id,
+    },
+  });
+
+  const post2 = await prisma.post.create({
+    data: {
+      title: 'Second Post',
+      slug: 'second-post',
+      thumbnail: 'https://example.com/thumbnail.jpg',
+      description: 'This is the second post',
+      content: 'Lorem ipsum dolor sit amet...',
+      userId: user2.id,
+    },
+  });
+
+  // Tạo dữ liệu cho mô hình Category
+  await prisma.category.create({
+    data: {
       name: 'Technology',
       slug: 'technology',
     },
   });
 
-  const categoryNews = await prisma.category.upsert({
-    where: { id: '2', name: 'News', slug: 'news' },
-    update: {},
-    create: {
-      name: 'News',
-      slug: 'news',
-    },
-  });
-  // Seed posts
-  const post1 = await prisma.post.upsert({
-    where: { slug: 'technology-post' },
-    update: {},
-    create: {
-      title: 'Technology Post',
-      slug: 'technology-post',
-      thumbnail: '/images/thumnail/thumnail-1.jpg',
-      description: 'This is a technology post description.',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      userId: admin.id, // Assuming admin.id is the ID of the admin user
+  await prisma.category.create({
+    data: {
+      name: 'Science',
+      slug: 'science',
     },
   });
 
-  const post2 = await prisma.post.upsert({
-    where: { slug: 'news-post' },
-    update: {},
-    create: {
-      title: 'News Post',
-      slug: 'news-post',
-      thumbnail: '/images/thumnail/thumnail-2.jpg',
-      description: 'This is a news post description.',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      userId: user.id, // Assuming user.id is the ID of the regular user
+  // Tạo dữ liệu cho mô hình Conversation và Message
+  const conversation1 = await prisma.conversation.create({
+    data: {
+      participants: {
+        connect: [{ id: user1.id }, { id: user2.id }],
+      },
     },
+  });
+
+  await prisma.message.createMany({
+    data: [
+      {
+        content: 'Hello, how are you?',
+        senderId: user1.id,
+        conversationId: conversation1.id,
+      },
+      {
+        content: "I'm good, thanks! How about you?",
+        senderId: user2.id,
+        conversationId: conversation1.id,
+      },
+      {
+        content: "I'm great!",
+        senderId: user1.id,
+        conversationId: conversation1.id,
+      },
+    ],
   });
 }
 
 main()
-  .catch(console.error)
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
   .finally(async () => {
     await prisma.$disconnect();
   });

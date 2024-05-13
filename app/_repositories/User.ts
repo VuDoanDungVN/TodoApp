@@ -20,6 +20,8 @@ export namespace UserRepository {
         personalInformation: true,
         address: true,
         posts: true,
+        conversations: true,
+        messages: true,
       },
     });
   }
@@ -39,6 +41,8 @@ export namespace UserRepository {
         personalInformation: true,
         address: true,
         posts: true,
+        conversations: true,
+        messages: true,
       },
       where: {
         id: id,

@@ -4,10 +4,7 @@ import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
+import TelegramIcon from '@mui/icons-material/Telegram';
 import { useSession } from 'next-auth/react';
 import HomeIcon from '@mui/icons-material/Home';
 import { Avatar, Box, Typography } from '@mui/material';
@@ -76,6 +73,14 @@ export default function NavbarMenu() {
             </ListItemButton>
           </List>
         </Collapse> */}
+        <List component='div' disablePadding>
+          <ListItemButton sx={{ margin: '5px 0px 0px 0px', borderRadius: '5px' }} href='/chat'>
+            <ListItemIcon>
+              <TelegramIcon />
+            </ListItemIcon>
+            <ListItemText primary='Chat' />
+          </ListItemButton>
+        </List>
         <List component='div' disablePadding>
           <ListItemButton sx={{ margin: '5px 0px 0px 0px', borderRadius: '5px' }} href='/user'>
             <ListItemIcon>
