@@ -151,3 +151,13 @@ model Message {
   userId         String?
   conversationId String
 }
+
+model Email {
+  id        String   @id @default(cuid())
+  from      String
+  to        String
+  subject   String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -47,32 +47,6 @@ export default function NavbarMenu() {
             <ListItemText primary='Trang Chủ' />
           </ListItemButton>
         </List>
-        {/* <ListItemButton onClick={handleClick}>
-          <ListItemIcon>
-            <Typography style={{ position: 'relative' }}>
-              {session?.user.image ? (
-                <Avatar alt='Remy Sharp' src={session?.user.image} />
-              ) : (
-                <AccountCircleIcon style={{ width: 40, height: 40, margin: '5px 0px 0px 0px' }} />
-              )}
-            </Typography>
-          </ListItemIcon>
-          <ListItemText primary={`${session?.user?.name}`} />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout='auto' unmountOnExit>
-          <List component='div' disablePadding>
-            <ListItemButton
-              sx={{ margin: '5px 0px 0px 0px', borderRadius: '5px' }}
-              href='/post-main'
-            >
-              <ListItemIcon>
-                <PermContactCalendarIcon />
-              </ListItemIcon>
-              <ListItemText primary='Profile' />
-            </ListItemButton>
-          </List>
-        </Collapse> */}
         <List component='div' disablePadding>
           <ListItemButton sx={{ margin: '5px 0px 0px 0px', borderRadius: '5px' }} href='/chat'>
             <ListItemIcon>
@@ -98,11 +72,11 @@ export default function NavbarMenu() {
           </ListItemButton>
         </List>
         <List component='div' disablePadding>
-          <ListItemButton sx={{ margin: '5px 0px 0px 0px', borderRadius: '5px' }} href='/personal'>
+          <ListItemButton sx={{ margin: '5px 0px 0px 0px', borderRadius: '5px' }} href='/todo'>
             <ListItemIcon>
               <CardGiftcardIcon />
             </ListItemIcon>
-            <ListItemText primary='Thương hiệu' />
+            <ListItemText primary='Todo List' />
           </ListItemButton>
         </List>
         <List component='div' disablePadding>
