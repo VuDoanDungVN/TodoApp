@@ -33,12 +33,25 @@ export default function TrendingPost(props: Props) {
   return (
     <Box>
       <Grid item xs={12} style={{ borderRadius: 10, margin: 10, padding: 10 }}>
-        <Grid container xs={12}>
-          <Typography variant='h6'>Trending</Typography>
-          <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-start', gap: '10px' }}>
+        <Grid
+          container
+          xs={12}
+          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+        >
+          <Grid
+            item
+            xs={12}
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-start',
+              gap: 15,
+              flexWrap: 'wrap',
+              alignItems: 'center',
+            }}
+          >
             {posts.map((post) => (
-              <Grid item xs={3} key={post.id}>
-                <Paper sx={cssPaperCard} variant='outlined'>
+              <Grid item key={post.id}>
+                <Paper sx={cssPaperCard} variant='outlined' style={{ width: '240px' }}>
                   <Grid container xs={12}>
                     <Grid
                       item
@@ -48,7 +61,7 @@ export default function TrendingPost(props: Props) {
                         alignItems: 'center',
                         position: 'relative',
                         width: '100%',
-                        height: 300,
+                        height: 250,
                       }}
                     >
                       <Image
@@ -74,13 +87,8 @@ export default function TrendingPost(props: Props) {
                         </IconButton>
                       </Grid>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} style={{ margin: '10px 0px' }}>
                       <Link underline='hover' color='inherit' href='/'>
-                        <Rating
-                          name='simple-controlled'
-                          value={post.likes}
-                          style={{ margin: '10px 0px' }}
-                        />
                         <Typography
                           style={{
                             fontSize: 15,
@@ -90,7 +98,7 @@ export default function TrendingPost(props: Props) {
                         </Typography>
                       </Link>
                       <Grid container xs={12}>
-                        <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                        <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <Typography style={{ fontSize: 11 }}>
                             {'Ngày update : ' + post?.createdAt.toLocaleDateString('vi-VN')}
                           </Typography>

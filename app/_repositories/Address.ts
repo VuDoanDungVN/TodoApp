@@ -22,8 +22,22 @@ export namespace AddressRepository {
 
   export async function create(address: Address) {
     const createAddress = await prisma.address.create({
-      data: address,
+      data: {
+        ...address,
+        userId: address.userId,
+      },
     });
     return createAddress;
+  }
+  export async function update(id: string, address: Address) {
+    const updateAddress = await prisma.address.update({
+      where: {
+        id: id,
+      },
+      data: {
+        ...address,
+      },
+    });
+    return updateAddress;
   }
 }

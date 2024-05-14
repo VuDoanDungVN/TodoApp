@@ -14,5 +14,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
-
-//Sau khi tạo xong API tiến hành tạo một form từ Component để tạo bài viết mới.

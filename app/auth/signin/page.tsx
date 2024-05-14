@@ -43,7 +43,7 @@ const cssBoxLogin = {
 };
 
 const cssBackgroundImage = {
-  backgroundImage: `url('/images/ana.png')`, // Thay đường dẫn tới ảnh của bạn ở đây
+  backgroundImage: `url('/images/bg.png')`, // Thay đường dẫn tới ảnh của bạn ở đây
   backgroundSize: 'full',
   backgroundPosition: 'center',
 };
@@ -86,25 +86,16 @@ const SignIn = () => {
             <Box sx={cssBoxCenter}>
               <Box sx={cssBoxLogin}>
                 <Grid item xs={12}>
-                  <Grid item xs={12} sx={cssCenter}>
-                    <Image
-                      src='/images/bg.png'
-                      alt='logo'
-                      width={510}
-                      height={250}
-                      style={cssCenter}
-                    />
-                  </Grid>
                   <Grid container spacing={2} style={{ padding: 20 }}>
                     <Grid item xs={12} sx={{ height: 50, mb: 1 }}>
-                      <Typography variant='h5' sx={{ color: '#325381', textAlign: 'center' }}>
-                        ユーザーログイン
+                      <Typography variant='h4' sx={{ color: '#325381', textAlign: 'center' }}>
+                        Login
                       </Typography>
                     </Grid>
                     <Grid item xs={12}>
                       <FormLabel id='email'>
                         <Typography sx={font16} style={{ marginBottom: '10px' }}>
-                          社員番号 :
+                          Email :
                         </Typography>
                       </FormLabel>
                       <Paper sx={{ display: 'flex', alignItems: 'center' }}>
@@ -128,7 +119,7 @@ const SignIn = () => {
                     </Grid>
                     <Grid item xs={12}>
                       <FormLabel id='email'>
-                        <Typography sx={font16}>パスワード :</Typography>
+                        <Typography sx={font16}>Password :</Typography>
                       </FormLabel>
                       <Paper sx={{ display: 'flex', alignItems: 'center' }}>
                         <LockIcon sx={cssIcon} />
@@ -161,7 +152,7 @@ const SignIn = () => {
                         onClick={onSubmit}
                         sx={{ backgroundColor: '#325381', padding: '10px 50px' }}
                       >
-                        ログイン
+                        Login
                       </Button>
                     </Grid>
                     <Grid item xs={12} sx={{ height: 50, mb: 1 }}>

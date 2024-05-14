@@ -26,18 +26,18 @@ export default async function Home(props: Props) {
   return (
     <Box>
       <Grid container xs={12} spacing={2}>
-        <Grid item xs={3}>
+        {/* <Grid item xs={3}>
           <Grid item xs={12} style={{ borderRadius: 10, margin: 10, padding: 10 }}>
-            {/**Đây là phần hiển thị Recent Post */}
+
             <RecentPost />
           </Grid>
           <Grid item xs={12} style={{ borderRadius: 10, margin: 10, padding: 10 }}>
-            {/**Đây là phần hiển thị News Post */}
+
             <NewsPost />
           </Grid>
-        </Grid>
-        {/**Đây là phần hiển thị Post */}
-        <Grid item xs={9}>
+        </Grid> */}
+
+        <Grid item xs={12}>
           <TrendingPost posts={posts} />
         </Grid>
       </Grid>

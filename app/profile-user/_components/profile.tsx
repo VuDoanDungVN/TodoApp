@@ -170,7 +170,7 @@ export default function ProfileMain(props: Props) {
                     Phone
                   </Typography>
                   <Typography style={{ padding: '15px px', fontSize: '1rem', color: '#d4d4d4' }}>
-                    {userList && userList[0].PersonalInformation?.phoneNumber}
+                    {userList && userList[0].personalInformation?.phoneNumber}
                   </Typography>
                 </Grid>
                 <Grid item xs={4} style={{ display: 'flex', justifyContent: 'flex-end' }}></Grid>
@@ -190,7 +190,7 @@ export default function ProfileMain(props: Props) {
                     Bio
                   </Typography>
                   <Typography style={{ padding: '5px 0px', fontSize: '1rem', color: '#d4d4d4' }}>
-                    {userList && userList[0].PersonalInformation?.bio}
+                    {userList && userList[0].personalInformation?.bio}
                   </Typography>
                 </Grid>
               </Grid>
