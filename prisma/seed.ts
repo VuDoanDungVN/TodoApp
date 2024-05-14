@@ -3,116 +3,94 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Tạo dữ liệu cho mô hình Role
+  // Tạo Role
   const adminRole = await prisma.role.create({
     data: {
-      name: 'admin',
+      name: 'Admin',
     },
   });
 
   const userRole = await prisma.role.create({
     data: {
-      name: 'user',
+      name: 'User',
     },
   });
 
-  // Tạo dữ liệu cho mô hình User
+  // Tạo User
   const user1 = await prisma.user.create({
     data: {
-      name: 'Vũ Dũng',
       email: 'vudungit92@gmail.com',
       password: 'admin',
       roleId: userRole.id,
+      name: 'Vũ Dũng',
     },
   });
 
   const user2 = await prisma.user.create({
     data: {
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      password: 'password456',
+      email: 'user2@example.com',
+      password: 'password2',
       roleId: userRole.id,
+      name: 'User Two',
     },
   });
 
-  // Tạo dữ liệu cho mô hình Account
-  await prisma.account.createMany({
-    data: [
-      {
-        userId: user1.id,
-        providerType: 'email',
-        providerId: 'vudungit92@gmail.com',
-        providerAccountId: 'vudungit92@gmail.com',
-      },
-      {
-        userId: user2.id,
-        providerType: 'email',
-        providerId: 'jane@example.com',
-        providerAccountId: 'jane@example.com',
-      },
-    ],
-  });
-
-  // Tạo dữ liệu cho mô hình PersonalInformation
-  const personalInfo1 = await prisma.personalInformation.create({
+  // Tạo Personal Information cho User
+  await prisma.personalInformation.create({
     data: {
       phoneNumber: '123456789',
-      bio: 'I love coding!',
+      bio: 'This is user one bio',
       userId: user1.id,
     },
   });
 
-  const personalInfo2 = await prisma.personalInformation.create({
+  await prisma.personalInformation.create({
     data: {
       phoneNumber: '987654321',
-      bio: 'I love reading!',
+      bio: 'This is user two bio',
       userId: user2.id,
     },
   });
 
-  // Tạo dữ liệu cho mô hình Address
-  const address1 = await prisma.address.create({
+  // Tạo Address cho User
+  await prisma.address.create({
     data: {
+      address: '123 Main St, City, Country',
       userId: user1.id,
-      address: '123 Main Street',
     },
   });
 
-  const address2 = await prisma.address.create({
+  await prisma.address.create({
     data: {
+      address: '456 Main St, City, Country',
       userId: user2.id,
-      address: '456 Elm Street',
     },
   });
 
-  // Tạo dữ liệu cho mô hình Session
-  const session1 = await prisma.session.create({
+  // Tạo Category
+  const category1 = await prisma.category.create({
     data: {
-      userId: user1.id,
-      expires: new Date(),
-      sessionToken: 'session_token_1',
-      accessToken: 'access_token_1',
+      name: 'Technology',
+      slug: 'technology',
     },
   });
 
-  const session2 = await prisma.session.create({
+  const category2 = await prisma.category.create({
     data: {
-      userId: user2.id,
-      expires: new Date(),
-      sessionToken: 'session_token_2',
-      accessToken: 'access_token_2',
+      name: 'Lifestyle',
+      slug: 'lifestyle',
     },
   });
 
-  // Tạo dữ liệu cho mô hình Post
+  // Tạo Post
   const post1 = await prisma.post.create({
     data: {
       title: 'First Post',
       slug: 'first-post',
-      thumbnail: 'https://example.com/thumbnail.jpg',
       description: 'This is the first post',
-      content: 'Lorem ipsum dolor sit amet...',
+      content: 'Content of the first post',
       userId: user1.id,
+      thumbnail: '/images/thumnail/thumnail-2.jpg',
     },
   });
 
@@ -120,55 +98,96 @@ async function main() {
     data: {
       title: 'Second Post',
       slug: 'second-post',
-      thumbnail: 'https://example.com/thumbnail.jpg',
       description: 'This is the second post',
-      content: 'Lorem ipsum dolor sit amet...',
+      content: 'Content of the second post',
+      userId: user2.id,
+      thumbnail: '/images/thumnail/thumnail-1.jpg',
+    },
+  });
+
+  // Tạo Conversation
+  const conversation1 = await prisma.conversation.create({
+    data: {
+      userId: user1.id,
+    },
+  });
+
+  const conversation2 = await prisma.conversation.create({
+    data: {
       userId: user2.id,
     },
   });
 
-  // Tạo dữ liệu cho mô hình Category
-  await prisma.category.create({
+  // Tạo Message
+  await prisma.message.create({
     data: {
-      name: 'Technology',
-      slug: 'technology',
+      content: 'Hello, this is a message in conversation 1',
+      userId: user1.id,
+      conversationId: conversation1.id,
     },
   });
 
-  await prisma.category.create({
+  await prisma.message.create({
     data: {
-      name: 'Science',
-      slug: 'science',
+      content: 'Hello, this is a message in conversation 2',
+      userId: user2.id,
+      conversationId: conversation2.id,
     },
   });
 
-  // Tạo dữ liệu cho mô hình Conversation và Message
-  const conversation1 = await prisma.conversation.create({
+  // Tạo Account
+  await prisma.account.create({
     data: {
-      participants: {
-        connect: [{ id: user1.id }, { id: user2.id }],
-      },
+      userId: user1.id,
+      providerType: 'oauth',
+      providerId: 'github',
+      providerAccountId: '12345',
     },
   });
 
-  await prisma.message.createMany({
-    data: [
-      {
-        content: 'Hello, how are you?',
-        senderId: user1.id,
-        conversationId: conversation1.id,
-      },
-      {
-        content: "I'm good, thanks! How about you?",
-        senderId: user2.id,
-        conversationId: conversation1.id,
-      },
-      {
-        content: "I'm great!",
-        senderId: user1.id,
-        conversationId: conversation1.id,
-      },
-    ],
+  await prisma.account.create({
+    data: {
+      userId: user2.id,
+      providerType: 'oauth',
+      providerId: 'google',
+      providerAccountId: '67890',
+    },
+  });
+
+  // Tạo Session
+  await prisma.session.create({
+    data: {
+      userId: user1.id,
+      expires: new Date('2024-12-31'),
+      sessionToken: 'session-token-1',
+      accessToken: 'access-token-1',
+    },
+  });
+
+  await prisma.session.create({
+    data: {
+      userId: user2.id,
+      expires: new Date('2024-12-31'),
+      sessionToken: 'session-token-2',
+      accessToken: 'access-token-2',
+    },
+  });
+
+  // Tạo Verification Request
+  await prisma.verificationRequest.create({
+    data: {
+      identifier: 'user1@example.com',
+      token: 'verification-token-1',
+      expires: new Date('2024-12-31'),
+    },
+  });
+
+  await prisma.verificationRequest.create({
+    data: {
+      identifier: 'user2@example.com',
+      token: 'verification-token-2',
+      expires: new Date('2024-12-31'),
+    },
   });
 }
 

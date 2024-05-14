@@ -1,12 +1,22 @@
-import { Box } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import React from 'react';
-import ChatMain from './_components/chat-main';
+import ChatList from '@/app/chat/_components/chat-list';
+import { UserRepository } from '@/app/_repositories/User';
+import { ConversationRepository } from '@/app/_repositories/Conversation';
+import { MessageRepository } from '@/app/_repositories/Message';
 
-export default function ChatPages() {
+export default async function ChatMain() {
+  const user = await UserRepository.findMany();
+  const conversations = await ConversationRepository.findMany();
+  const messages = await MessageRepository.findMany();
   return (
     <>
       <Box>
-        <ChatMain />
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <ChatList messages={messages} conversations={conversations} user={user} />
+          </Grid>
+        </Grid>
       </Box>
     </>
   );

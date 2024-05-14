@@ -16,12 +16,12 @@ export namespace UserRepository {
   export async function findMany() {
     return await prisma.user.findMany({
       include: {
-        role: true,
-        personalInformation: true,
         address: true,
-        posts: true,
-        conversations: true,
+        conversation: true,
         messages: true,
+        personalInformation: true,
+        posts: true,
+        role: true,
       },
     });
   }
@@ -33,16 +33,16 @@ export namespace UserRepository {
       },
     });
   }
-  //Hàm này để lựa chọn chọn lọc theo id và include các thông tin cá nhân và địa chỉ
+  //Hàm này để lựa chọn chọn lọc theo id và include các thông tin cá nhân và địa chỉ của user đó
   export async function findUniqueWithPersonalAndAddress(id: string) {
     return await prisma.user.findUnique({
       include: {
-        role: true,
-        personalInformation: true,
         address: true,
-        posts: true,
-        conversations: true,
+        conversation: true,
         messages: true,
+        personalInformation: true,
+        posts: true,
+        role: true,
       },
       where: {
         id: id,
@@ -55,7 +55,12 @@ export namespace UserRepository {
     const createdUser = await prisma.user.create({
       data: user,
       include: {
+        address: true,
+        conversation: true,
+        messages: true,
         personalInformation: true,
+        posts: true,
+        role: true,
       },
     });
 
