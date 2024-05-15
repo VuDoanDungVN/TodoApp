@@ -48,11 +48,11 @@ export default function MailerMain(props: Props) {
     <Container maxWidth='sm'>
       <Box sx={{ my: 4 }}>
         <Typography variant='h4' component='h1' gutterBottom>
-          Send Email
+          Form gửi mail
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
-            label='From'
+            label='Mail Gửi'
             type='email'
             name='from'
             value={from.from}
@@ -62,17 +62,16 @@ export default function MailerMain(props: Props) {
             required
           />
           <TextField
-            label='To'
+            label='Mail Nhận'
             type='email'
             name='to'
             value={from.to}
             onChange={handleChange}
             fullWidth
             margin='normal'
-            required
           />
           <TextField
-            label='Subject'
+            label='Nhập Tiêu Đề'
             type='text'
             name='subject'
             value={from.subject}
@@ -82,7 +81,7 @@ export default function MailerMain(props: Props) {
             required
           />
           <TextField
-            label='Content'
+            label='Nhập link web cần gửi mail:'
             type='text'
             name='content'
             value={from.content}
@@ -94,7 +93,7 @@ export default function MailerMain(props: Props) {
             required
           />
           <Button type='submit' variant='contained' color='primary' sx={{ mt: 2 }}>
-            Send Email
+            Gửi mail
           </Button>
         </form>
       </Box>

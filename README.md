@@ -32,3 +32,5 @@ npx tsx prisma/seed-dev.ts<br>
 git merge origin main<br>
 npx prisma generate<br>
 npm run build<br>
+
+https://security.google.com/settings/security/apppasswords

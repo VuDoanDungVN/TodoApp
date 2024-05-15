@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import { useSession } from 'next-auth/react';
 import HomeIcon from '@mui/icons-material/Home';
-import { Avatar, Box, Typography } from '@mui/material';
+import MarkEmailUnreadIcon from '@mui/icons-material/MarkEmailUnread';
 import FolderIcon from '@mui/icons-material/Folder';
 import AutoAwesomeMosaicIcon from '@mui/icons-material/AutoAwesomeMosaic';
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
@@ -56,11 +56,11 @@ export default function NavbarMenu() {
           </ListItemButton>
         </List>
         <List component='div' disablePadding>
-          <ListItemButton sx={{ margin: '5px 0px 0px 0px', borderRadius: '5px' }} href='/user'>
+          <ListItemButton sx={{ margin: '5px 0px 0px 0px', borderRadius: '5px' }} href='/mailer'>
             <ListItemIcon>
-              <FolderIcon />
+              <MarkEmailUnreadIcon />
             </ListItemIcon>
-            <ListItemText primary='Dự án' />
+            <ListItemText primary='Gửi Mail' />
           </ListItemButton>
         </List>
         <List component='div' disablePadding>

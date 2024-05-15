@@ -19,7 +19,12 @@ export namespace MailerRepository {
 
   export async function create(email: Mailer) {
     return await prisma.email.create({
-      data: email,
+      data: {
+        from: email.from,
+        to: email.to,
+        subject: email.subject,
+        content: email.content,
+      },
     });
   }
 }
