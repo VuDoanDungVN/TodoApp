@@ -9,6 +9,11 @@ import {
   Select,
   FormControl,
   InputLabel,
+  colors,
+  Radio,
+  Icon,
+  IconButton,
+  Box,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -29,6 +34,7 @@ import Tooltip from '@mui/material/Tooltip';
 import LabelIcon from '@mui/icons-material/Label';
 import Divider from '@mui/material/Divider';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import EditIcon from '@mui/icons-material/Edit';
 import { Task } from '@/app/_repositories/Task';
 import { User } from '@/app/_repositories/User';
 import { useRouter } from 'next/navigation';
@@ -65,6 +71,9 @@ export default function TodoList(props: Props) {
     fontSize: '13px',
     transition: 'color 0.3s',
     cursor: 'pointer',
+    margin: '5px 0px',
+    backgroundColor: '#fff',
+    width: '100%',
   };
 
   const [users, setUsers] = useState(props.user);
@@ -110,7 +119,6 @@ export default function TodoList(props: Props) {
       });
 
       if (response.ok) {
-        console.log('Đã tạo Task thành công!');
         router.push('/todo');
       } else {
         console.error('Failed to create post');
@@ -119,11 +127,17 @@ export default function TodoList(props: Props) {
       console.error('Error creating post:', error);
     }
   };
+  const [expanded, setExpanded] = React.useState<string | false>('panel1');
+
+  const handleChangeAccordion =
+    (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+      setExpanded(newExpanded ? panel : false);
+    };
 
   return (
     <div>
       <Grid container spacing={2}>
-        <Grid item xs={12} style={{ margin: '10px' }}>
+        <Grid item xs={12} style={{ margin: '30px 100px' }}>
           <Typography variant='h4' component='h1' gutterBottom>
             Today Task
           </Typography>
@@ -131,29 +145,110 @@ export default function TodoList(props: Props) {
             <CheckCircleOutlineIcon style={{ fontSize: '13px' }} /> Today Task
           </Typography>
           <Grid container spacing={0}>
-            <Grid item xs={12} style={{ margin: '10px 0px' }}>
-              <Paper
-                elevation={0}
-                style={{
-                  padding: '20px',
-                  backgroundColor: '#f2f3f5',
-                  border: '0.5px solid #e1e4e7',
-                }}
-              >
-                {tasks && tasks.length > 0 ? (
-                  tasks.map((task) => (
-                    <Grid container spacing={2} key={task.id}>
-                      <Typography style={textStyles}>
-                        <MoveToInboxIcon style={{ fontSize: '20px' }} />
-                        {task.title}
-                      </Typography>
-                    </Grid>
-                  ))
-                ) : (
-                  <Typography style={textStyles}>Bạn chưa tạo Task nào cả?</Typography>
-                )}
-              </Paper>
-            </Grid>
+            {tasks && tasks.length > 0 ? (
+              tasks.map((task, index) => (
+                <Grid item xs={12} key={task.id}>
+                  <Grid item xs={12} style={textStyles}>
+                    <Box style={{ width: '100%' }}>
+                      <Accordion
+                        expanded={expanded === task.id}
+                        onChange={handleChangeAccordion(task.id)}
+                      >
+                        <AccordionSummary
+                          aria-controls={`${task.id}-content`}
+                          id={`${task.id}-header`}
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            backgroundColor: '#f5f5f5',
+                          }}
+                        >
+                          <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                              <Typography style={{ fontSize: '12px', fontWeight: 600 }}>
+                                {++index} : {task.title}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                              <Typography
+                                style={{ fontSize: '12px', fontWeight: 600, margin: '10px 0px' }}
+                              >
+                                Content :
+                              </Typography>
+                              <Typography style={{ fontSize: '12px', color: '#3c3c3c' }}>
+                                {task.description}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography
+                                style={{ fontSize: '12px', fontWeight: 600, margin: '10px 0px' }}
+                              >
+                                ID:
+                              </Typography>
+                              <Typography style={{ fontSize: '12px' }}>{task.userId}</Typography>
+                            </Grid>
+                          </Grid>
+                          <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                              <Typography
+                                style={{ fontSize: '12px', fontWeight: 600, margin: '10px 0px' }}
+                              >
+                                Date :
+                              </Typography>
+                              <Typography style={{ fontSize: '12px', color: '#3c3c3c' }}>
+                                {task.createdAt.toDateString()}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography
+                                style={{ fontSize: '12px', fontWeight: 600, margin: '10px 0px' }}
+                              >
+                                Complete:
+                              </Typography>
+                              <Typography style={{ fontSize: '12px' }}>
+                                {task.completed ? 'Completed' : 'Not Completed'}
+                              </Typography>
+                            </Grid>
+                            <Grid
+                              item
+                              xs={12}
+                              style={{ display: 'flex', justifyContent: 'flex-end' }}
+                            >
+                              <Button
+                                style={{
+                                  fontSize: '11px',
+                                  padding: '5px 15px',
+                                }}
+                                color='primary'
+                              >
+                                <EditIcon style={{ fontSize: '20px', margin: '0px 5px' }} /> Edit
+                              </Button>
+                              <Button
+                                style={{
+                                  fontSize: '11px',
+                                  padding: '5px 15px',
+                                }}
+                                color='error'
+                              >
+                                <ClearIcon style={{ fontSize: '20px', margin: '0px 5px' }} /> Delete
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </AccordionDetails>
+                      </Accordion>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6} style={{ display: 'flex', justifyContent: 'flex-end' }}></Grid>
+                </Grid>
+              ))
+            ) : (
+              <Typography style={textStyles}>Bạn chưa tạo Task nào cả?</Typography>
+            )}
             <form style={{ width: '100%' }}>
               <Grid item xs={12} style={textStyles}>
                 <Accordion style={{ width: '100%' }} expanded={isAccordionExpanded}>
@@ -161,9 +256,19 @@ export default function TodoList(props: Props) {
                     aria-controls='panel1-content'
                     id='panel1-header'
                     onClick={handleOpenAccord}
+                    sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
                   >
                     <AddIcon style={{ color: '#e40d0d', margin: '0px 5px' }} />
-                    <Typography style={textStyles}>Add task</Typography>
+                    <Typography
+                      style={{
+                        fontSize: '12px',
+                        display: 'flex',
+                        justifyContent: 'flex-start',
+                        alignItems: 'center',
+                      }}
+                    >
+                      Add task
+                    </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <TextField
@@ -179,6 +284,9 @@ export default function TodoList(props: Props) {
                         padding: '5px 0px',
                       }}
                       fullWidth
+                      inputProps={{
+                        style: { fontSize: '12px' }, // change this to the desired font size
+                      }}
                     />
                   </AccordionDetails>
                   <AccordionDetails>
@@ -195,10 +303,16 @@ export default function TodoList(props: Props) {
                         padding: '5px 0px',
                       }}
                       fullWidth
+                      inputProps={{
+                        style: { fontSize: '12px' }, // change this to the desired font size
+                      }}
                     />
                   </AccordionDetails>
                   <AccordionDetails>
                     <FormControl style={{ width: '100%' }}>
+                      <Typography style={{ fontSize: '13px', margin: '10px 0px' }}>
+                        Assign to:
+                      </Typography>
                       <Select name='userId' value={task.userId} onChange={handleChange} fullWidth>
                         {users?.map((user) => (
                           <MenuItem key={user.id} value={user.id}>

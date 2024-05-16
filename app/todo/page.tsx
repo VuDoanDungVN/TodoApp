@@ -10,7 +10,7 @@ export default async function TodoPages() {
     <>
       <Box>
         <Grid container xs={12} spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <TodoList task={tasks} user={users} />
           </Grid>
         </Grid>

@@ -1,0 +1,35 @@
+<Grid item xs={12} style={{ margin: '10px 0px' }}>
+              <Paper elevation={0}>
+                {tasks && tasks.length > 0 ? (
+                  tasks.map((task) => (
+                    <Accordion
+                      key={task.id}
+                      expanded={expanded === task.id}
+                      onChange={handleChangeAccordion(task.id)}
+                    >
+                      <AccordionSummary
+                        aria-controls={`${task.id}-content`}
+                        id={`${task.id}-header`}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'flex-start',
+                          alignItems: 'center',
+                          backgroundColor: '#f5f5f5',
+                        }}
+                      >
+                        <Typography style={{ color: '#325381', fontSize: '14px' }}>
+                          {task.title}
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Typography style={{ color: '#bdbdbd', fontSize: '13px' }}>
+                          {task.description}
+                        </Typography>
+                      </AccordionDetails>
+                    </Accordion>
+                  ))
+                ) : (
+                  <Typography style={textStyles}>Bạn chưa tạo Task nào cả?</Typography>
+                )}
+              </Paper>
+            </Grid>
