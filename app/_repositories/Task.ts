@@ -6,6 +6,9 @@ export type Task = Exclude<Prisma.PromiseReturnType<typeof TaskRepository.findUn
 export namespace TaskRepository {
   export async function findMany() {
     return await prisma.task.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
       include: {
         user: true,
       },

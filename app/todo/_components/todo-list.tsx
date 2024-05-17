@@ -1,24 +1,9 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import {
-  Typography,
-  Grid,
-  Button,
-  TextField,
-  Paper,
-  Select,
-  FormControl,
-  InputLabel,
-  colors,
-  Radio,
-  Icon,
-  IconButton,
-  Box,
-} from '@mui/material';
+import { Typography, Grid, Button, TextField, Select, FormControl, Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Accordion from '@mui/material/Accordion';
-import MoveToInboxIcon from '@mui/icons-material/MoveToInbox';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
@@ -35,6 +20,13 @@ import LabelIcon from '@mui/icons-material/Label';
 import Divider from '@mui/material/Divider';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import EditIcon from '@mui/icons-material/Edit';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+import { TransitionProps } from '@mui/material/transitions';
 import { Task } from '@/app/_repositories/Task';
 import { User } from '@/app/_repositories/User';
 import { useRouter } from 'next/navigation';
@@ -43,12 +35,26 @@ type Props = {
   user: User[];
 };
 
+const Transition = React.forwardRef(function Transition(
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>,
+) {
+  return <Slide direction='up' ref={ref} {...props} />;
+});
+
 export default function TodoList(props: Props) {
   const tasks = props.task;
   const router = useRouter();
   const [isHover, setIsHover] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  };
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -119,6 +125,7 @@ export default function TodoList(props: Props) {
       });
 
       if (response.ok) {
+        router.refresh();
         router.push('/todo');
       } else {
         console.error('Failed to create post');
@@ -137,362 +144,410 @@ export default function TodoList(props: Props) {
   return (
     <div>
       <Grid container spacing={2}>
-        <Grid item xs={12} style={{ margin: '30px 100px' }}>
+        <Grid item xs={12} style={{ margin: '30px 0px' }}>
           <Typography variant='h4' component='h1' gutterBottom>
             Today Task
           </Typography>
           <Typography style={{ color: '#bdbdbd', fontSize: '13px', margin: '10px 0px' }}>
             <CheckCircleOutlineIcon style={{ fontSize: '13px' }} /> Today Task
           </Typography>
-          <Grid container spacing={0}>
-            {tasks && tasks.length > 0 ? (
-              tasks.map((task, index) => (
-                <Grid item xs={12} key={task.id}>
+          <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <Grid item xs={6}>
+              <Grid container spacing={0}>
+                {tasks && tasks.length > 0 ? (
+                  tasks.map((task, index) => (
+                    <Grid item xs={12} key={task.id}>
+                      <Grid item xs={12} style={textStyles}>
+                        <Box style={{ width: '100%' }}>
+                          <Accordion
+                            expanded={expanded === task.id}
+                            onChange={handleChangeAccordion(task.id)}
+                          >
+                            <AccordionSummary
+                              aria-controls={`${task.id}-content`}
+                              id={`${task.id}-header`}
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
+                                backgroundColor: '#f5f5f5',
+                              }}
+                            >
+                              <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                  <Typography style={{ fontSize: '12px', fontWeight: 600 }}>
+                                    {++index} : {task.title}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                              <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                  <Typography
+                                    style={{
+                                      fontSize: '12px',
+                                      fontWeight: 600,
+                                      margin: '10px 0px',
+                                    }}
+                                  >
+                                    Content :
+                                  </Typography>
+                                  <Typography style={{ fontSize: '12px', color: '#3c3c3c' }}>
+                                    {task.description}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                  <Typography
+                                    style={{
+                                      fontSize: '12px',
+                                      fontWeight: 600,
+                                      margin: '10px 0px',
+                                    }}
+                                  >
+                                    ID:
+                                  </Typography>
+                                  <Typography style={{ fontSize: '12px' }}>
+                                    {task.userId}
+                                  </Typography>
+                                </Grid>
+                              </Grid>
+                              <Grid container spacing={2}>
+                                <Grid item xs={6}>
+                                  <Typography
+                                    style={{
+                                      fontSize: '12px',
+                                      fontWeight: 600,
+                                      margin: '10px 0px',
+                                    }}
+                                  >
+                                    Date :
+                                  </Typography>
+                                  <Typography style={{ fontSize: '12px', color: '#3c3c3c' }}>
+                                    {task.createdAt.toDateString()}
+                                  </Typography>
+                                </Grid>
+                                <Grid item xs={6}>
+                                  <Typography
+                                    style={{
+                                      fontSize: '12px',
+                                      fontWeight: 600,
+                                      margin: '10px 0px',
+                                    }}
+                                  >
+                                    Complete:
+                                  </Typography>
+                                  <Typography style={{ fontSize: '12px' }}>
+                                    {task.completed ? 'Completed' : 'Not Completed'}
+                                  </Typography>
+                                </Grid>
+                                <Grid
+                                  item
+                                  xs={12}
+                                  style={{ display: 'flex', justifyContent: 'flex-end' }}
+                                >
+                                  <Button
+                                    style={{
+                                      fontSize: '11px',
+                                      padding: '5px 15px',
+                                    }}
+                                    color='primary'
+                                  >
+                                    <EditIcon style={{ fontSize: '20px', margin: '0px 5px' }} />{' '}
+                                    Edit
+                                  </Button>
+                                  <Button
+                                    style={{
+                                      fontSize: '11px',
+                                      padding: '5px 15px',
+                                    }}
+                                    color='error'
+                                  >
+                                    <ClearIcon style={{ fontSize: '20px', margin: '0px 5px' }} />{' '}
+                                    Delete
+                                  </Button>
+                                </Grid>
+                              </Grid>
+                            </AccordionDetails>
+                          </Accordion>
+                        </Box>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={6}
+                        style={{ display: 'flex', justifyContent: 'flex-end' }}
+                      ></Grid>
+                    </Grid>
+                  ))
+                ) : (
+                  <Typography style={textStyles}>Bạn chưa tạo Task nào cả?</Typography>
+                )}
+                <form style={{ width: '100%' }}>
                   <Grid item xs={12} style={textStyles}>
-                    <Box style={{ width: '100%' }}>
-                      <Accordion
-                        expanded={expanded === task.id}
-                        onChange={handleChangeAccordion(task.id)}
+                    <Accordion style={{ width: '100%' }} expanded={isAccordionExpanded}>
+                      <AccordionSummary
+                        aria-controls='panel1-content'
+                        id='panel1-header'
+                        onClick={handleOpenAccord}
+                        sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
                       >
-                        <AccordionSummary
-                          aria-controls={`${task.id}-content`}
-                          id={`${task.id}-header`}
+                        <AddIcon style={{ color: '#e40d0d', margin: '0px 5px' }} />
+                        <Typography
                           style={{
+                            fontSize: '12px',
                             display: 'flex',
                             justifyContent: 'flex-start',
                             alignItems: 'center',
-                            backgroundColor: '#f5f5f5',
                           }}
-                        >
-                          <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                              <Typography style={{ fontSize: '12px', fontWeight: 600 }}>
-                                {++index} : {task.title}
-                              </Typography>
-                            </Grid>
-                          </Grid>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                              <Typography
-                                style={{ fontSize: '12px', fontWeight: 600, margin: '10px 0px' }}
-                              >
-                                Content :
-                              </Typography>
-                              <Typography style={{ fontSize: '12px', color: '#3c3c3c' }}>
-                                {task.description}
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography
-                                style={{ fontSize: '12px', fontWeight: 600, margin: '10px 0px' }}
-                              >
-                                ID:
-                              </Typography>
-                              <Typography style={{ fontSize: '12px' }}>{task.userId}</Typography>
-                            </Grid>
-                          </Grid>
-                          <Grid container spacing={2}>
-                            <Grid item xs={6}>
-                              <Typography
-                                style={{ fontSize: '12px', fontWeight: 600, margin: '10px 0px' }}
-                              >
-                                Date :
-                              </Typography>
-                              <Typography style={{ fontSize: '12px', color: '#3c3c3c' }}>
-                                {task.createdAt.toDateString()}
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={6}>
-                              <Typography
-                                style={{ fontSize: '12px', fontWeight: 600, margin: '10px 0px' }}
-                              >
-                                Complete:
-                              </Typography>
-                              <Typography style={{ fontSize: '12px' }}>
-                                {task.completed ? 'Completed' : 'Not Completed'}
-                              </Typography>
-                            </Grid>
-                            <Grid
-                              item
-                              xs={12}
-                              style={{ display: 'flex', justifyContent: 'flex-end' }}
-                            >
-                              <Button
-                                style={{
-                                  fontSize: '11px',
-                                  padding: '5px 15px',
-                                }}
-                                color='primary'
-                              >
-                                <EditIcon style={{ fontSize: '20px', margin: '0px 5px' }} /> Edit
-                              </Button>
-                              <Button
-                                style={{
-                                  fontSize: '11px',
-                                  padding: '5px 15px',
-                                }}
-                                color='error'
-                              >
-                                <ClearIcon style={{ fontSize: '20px', margin: '0px 5px' }} /> Delete
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        </AccordionDetails>
-                      </Accordion>
-                    </Box>
-                  </Grid>
-                  <Grid item xs={6} style={{ display: 'flex', justifyContent: 'flex-end' }}></Grid>
-                </Grid>
-              ))
-            ) : (
-              <Typography style={textStyles}>Bạn chưa tạo Task nào cả?</Typography>
-            )}
-            <form style={{ width: '100%' }}>
-              <Grid item xs={12} style={textStyles}>
-                <Accordion style={{ width: '100%' }} expanded={isAccordionExpanded}>
-                  <AccordionSummary
-                    aria-controls='panel1-content'
-                    id='panel1-header'
-                    onClick={handleOpenAccord}
-                    sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
-                  >
-                    <AddIcon style={{ color: '#e40d0d', margin: '0px 5px' }} />
-                    <Typography
-                      style={{
-                        fontSize: '12px',
-                        display: 'flex',
-                        justifyContent: 'flex-start',
-                        alignItems: 'center',
-                      }}
-                    >
-                      Add task
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <TextField
-                      id='standard-basic'
-                      placeholder='Add task...'
-                      variant='standard'
-                      name='title'
-                      value={task.title}
-                      onChange={handleChange}
-                      sx={{
-                        '& fieldset': { border: '0.5px solid #e1e4e7' },
-                        outline: 'none',
-                        padding: '5px 0px',
-                      }}
-                      fullWidth
-                      inputProps={{
-                        style: { fontSize: '12px' }, // change this to the desired font size
-                      }}
-                    />
-                  </AccordionDetails>
-                  <AccordionDetails>
-                    <TextField
-                      id='standard-basic'
-                      placeholder='Description...'
-                      variant='standard'
-                      name='description'
-                      value={task.description}
-                      onChange={handleChange}
-                      sx={{
-                        '& fieldset': { border: '0.5px solid #e1e4e7' },
-                        outline: 'none',
-                        padding: '5px 0px',
-                      }}
-                      fullWidth
-                      inputProps={{
-                        style: { fontSize: '12px' }, // change this to the desired font size
-                      }}
-                    />
-                  </AccordionDetails>
-                  <AccordionDetails>
-                    <FormControl style={{ width: '100%' }}>
-                      <Typography style={{ fontSize: '13px', margin: '10px 0px' }}>
-                        Assign to:
-                      </Typography>
-                      <Select name='userId' value={task.userId} onChange={handleChange} fullWidth>
-                        {users?.map((user) => (
-                          <MenuItem key={user.id} value={user.id}>
-                            {user.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </AccordionDetails>
-                  <AccordionDetails
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'flex-start',
-                      gap: '10px',
-                    }}
-                  >
-                    <Button
-                      variant='outlined'
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-around',
-                        alignContent: 'center',
-                        color: '#3d893b',
-                        fontSize: '11px',
-                        alignItems: 'center',
-                        padding: '5px 15px',
-                      }}
-                    >
-                      <SubtitlesIcon style={{ fontSize: '20px', marginRight: '10px' }} />
-                      <Typography
-                        style={{
-                          fontSize: '11px',
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignContent: 'center',
-                        }}
-                      >
-                        Today
-                      </Typography>
-                      <ClearIcon style={{ fontSize: '15px', marginLeft: '10px' }} />
-                    </Button>
-                    <Button
-                      variant='outlined'
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-around',
-                        alignContent: 'center',
-                        fontSize: '11px',
-                        alignItems: 'center',
-                        padding: '5px 10px',
-                      }}
-                    >
-                      <AssistantPhotoIcon style={{ fontSize: '20px', marginRight: '10px' }} />
-                      <Typography
-                        style={{
-                          fontSize: '11px',
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignContent: 'center',
-                        }}
-                      >
-                        Priority
-                      </Typography>
-                    </Button>
-                    <Button
-                      variant='outlined'
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-around',
-                        alignContent: 'center',
-                        color: '#3d893b',
-                        fontSize: '11px',
-                        alignItems: 'center',
-                        padding: '5px 15px',
-                      }}
-                    >
-                      <AccessAlarmIcon style={{ fontSize: '20px', marginRight: '10px' }} />
-                      <Typography
-                        style={{
-                          fontSize: '11px',
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignContent: 'center',
-                        }}
-                      >
-                        Reminders
-                      </Typography>
-                      <Button variant='text' style={{ padding: '2px 10px', fontSize: '11px' }}>
-                        Upgrade
-                      </Button>
-                    </Button>
-                    <Tooltip title='More Actions'>
-                      <Button
-                        variant='outlined'
-                        onClick={handleClick}
-                        size='small'
-                        sx={{ color: '#93a2b9' }}
-                        aria-controls={open ? 'account-menu' : undefined}
-                        aria-haspopup='true'
-                        aria-expanded={open ? 'true' : undefined}
-                      >
-                        <MoreHorizIcon />
-                      </Button>
-                    </Tooltip>
-                    <Menu
-                      anchorEl={anchorEl}
-                      id='account-menu'
-                      open={open}
-                      onClose={handleClose}
-                      onClick={handleClose}
-                      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                      style={{ marginTop: '5px', width: '250px' }}
-                    >
-                      <MenuItem onClick={handleClose} style={{ width: '250px', fontSize: '13px' }}>
-                        <ListItemIcon>
-                          <LabelIcon fontSize='small' />
-                        </ListItemIcon>
-                        Labels
-                      </MenuItem>
-                      <MenuItem onClick={handleClose} style={{ width: '250px', fontSize: '13px' }}>
-                        <ListItemIcon>
-                          <FmdGoodOutlinedIcon fontSize='small' />
-                        </ListItemIcon>
-                        Location
-                      </MenuItem>
-                      <MenuItem onClick={handleClose} style={{ width: '250px', fontSize: '13px' }}>
-                        <ListItemIcon>
-                          <ExtensionIcon fontSize='small' />
-                        </ListItemIcon>
-                        Logout
-                      </MenuItem>
-                      <MenuItem onClick={handleClose} style={{ width: '250px', fontSize: '13px' }}>
-                        Edit task actions
-                      </MenuItem>
-                    </Menu>
-                  </AccordionDetails>
-                  <Divider />
-                  <Grid container xs={12}>
-                    <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                      <Tooltip title='Cancel'>
-                        <Button
-                          variant='text'
-                          sx={{
-                            padding: '5px 15px',
-                            fontSize: '11px',
-                            margin: '10px 0px',
-                            backgroundColor: '#f5f5f5',
-                            ':hover': {
-                              backgroundColor: '#e1e4e7',
-                            },
-                            color: '#474747',
-                          }}
-                          onClick={handleCancel}
-                        >
-                          Cancel
-                        </Button>
-                      </Tooltip>
-                      <Tooltip title='Add task'>
-                        <Button
-                          variant='contained'
-                          sx={{
-                            padding: '5px 15px',
-                            fontSize: '11px',
-                            margin: '10px 15px',
-                            backgroundColor: '#eda59e',
-                            ':hover': {
-                              backgroundColor: '#e40d0d',
-                            },
-                          }}
-                          onClick={handleSubmit}
                         >
                           Add task
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <TextField
+                          id='standard-basic'
+                          placeholder='Add task...'
+                          variant='standard'
+                          name='title'
+                          value={task.title}
+                          onChange={handleChange}
+                          sx={{
+                            '& fieldset': { border: '0.5px solid #e1e4e7' },
+                            outline: 'none',
+                            padding: '5px 0px',
+                          }}
+                          fullWidth
+                          inputProps={{
+                            style: { fontSize: '12px' }, // change this to the desired font size
+                          }}
+                        />
+                      </AccordionDetails>
+                      <AccordionDetails>
+                        <TextField
+                          id='standard-basic'
+                          placeholder='Description...'
+                          variant='standard'
+                          name='description'
+                          value={task.description}
+                          onChange={handleChange}
+                          sx={{
+                            '& fieldset': { border: '0.5px solid #e1e4e7' },
+                            outline: 'none',
+                            padding: '5px 0px',
+                          }}
+                          fullWidth
+                          inputProps={{
+                            style: { fontSize: '12px' }, // change this to the desired font size
+                          }}
+                        />
+                      </AccordionDetails>
+                      <AccordionDetails>
+                        <FormControl style={{ width: '100%' }}>
+                          <Typography style={{ fontSize: '13px', margin: '10px 0px' }}>
+                            Assign to:
+                          </Typography>
+                          <Select
+                            name='userId'
+                            value={task.userId}
+                            onChange={handleChange}
+                            fullWidth
+                          >
+                            {users?.map((user) => (
+                              <MenuItem key={user.id} value={user.id}>
+                                {user.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </AccordionDetails>
+                      <AccordionDetails
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'flex-start',
+                          gap: '10px',
+                        }}
+                      >
+                        <Button
+                          variant='outlined'
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-around',
+                            alignContent: 'center',
+                            color: '#3d893b',
+                            fontSize: '11px',
+                            alignItems: 'center',
+                            padding: '5px 15px',
+                          }}
+                        >
+                          <SubtitlesIcon style={{ fontSize: '20px', marginRight: '10px' }} />
+                          <Typography
+                            style={{
+                              fontSize: '11px',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignContent: 'center',
+                            }}
+                          >
+                            Today
+                          </Typography>
+                          <ClearIcon style={{ fontSize: '15px', marginLeft: '10px' }} />
                         </Button>
-                      </Tooltip>
-                    </Grid>
+                        <Button
+                          variant='outlined'
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-around',
+                            alignContent: 'center',
+                            fontSize: '11px',
+                            alignItems: 'center',
+                            padding: '5px 10px',
+                          }}
+                        >
+                          <AssistantPhotoIcon style={{ fontSize: '20px', marginRight: '10px' }} />
+                          <Typography
+                            style={{
+                              fontSize: '11px',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignContent: 'center',
+                            }}
+                          >
+                            Priority
+                          </Typography>
+                        </Button>
+                        <Button
+                          variant='outlined'
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-around',
+                            alignContent: 'center',
+                            color: '#3d893b',
+                            fontSize: '11px',
+                            alignItems: 'center',
+                            padding: '5px 15px',
+                          }}
+                        >
+                          <AccessAlarmIcon style={{ fontSize: '20px', marginRight: '10px' }} />
+                          <Typography
+                            style={{
+                              fontSize: '11px',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignContent: 'center',
+                            }}
+                          >
+                            Reminders
+                          </Typography>
+                          <Button variant='text' style={{ padding: '2px 10px', fontSize: '11px' }}>
+                            Upgrade
+                          </Button>
+                        </Button>
+                        <Tooltip title='More Actions'>
+                          <Button
+                            variant='outlined'
+                            onClick={handleClick}
+                            size='small'
+                            sx={{ color: '#93a2b9' }}
+                            aria-controls={open ? 'account-menu' : undefined}
+                            aria-haspopup='true'
+                            aria-expanded={open ? 'true' : undefined}
+                          >
+                            <MoreHorizIcon />
+                          </Button>
+                        </Tooltip>
+                        <Menu
+                          anchorEl={anchorEl}
+                          id='account-menu'
+                          open={open}
+                          onClose={handleClose}
+                          onClick={handleClose}
+                          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                          style={{ marginTop: '5px', width: '250px' }}
+                        >
+                          <MenuItem
+                            onClick={handleClose}
+                            style={{ width: '250px', fontSize: '13px' }}
+                          >
+                            <ListItemIcon>
+                              <LabelIcon fontSize='small' />
+                            </ListItemIcon>
+                            Labels
+                          </MenuItem>
+                          <MenuItem
+                            onClick={handleClose}
+                            style={{ width: '250px', fontSize: '13px' }}
+                          >
+                            <ListItemIcon>
+                              <FmdGoodOutlinedIcon fontSize='small' />
+                            </ListItemIcon>
+                            Location
+                          </MenuItem>
+                          <MenuItem
+                            onClick={handleClose}
+                            style={{ width: '250px', fontSize: '13px' }}
+                          >
+                            <ListItemIcon>
+                              <ExtensionIcon fontSize='small' />
+                            </ListItemIcon>
+                            Logout
+                          </MenuItem>
+                          <MenuItem
+                            onClick={handleClose}
+                            style={{ width: '250px', fontSize: '13px' }}
+                          >
+                            Edit task actions
+                          </MenuItem>
+                        </Menu>
+                      </AccordionDetails>
+                      <Divider />
+                      <Grid container xs={12}>
+                        <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                          <Tooltip title='Cancel'>
+                            <Button
+                              variant='text'
+                              sx={{
+                                padding: '5px 15px',
+                                fontSize: '11px',
+                                margin: '10px 0px',
+                                backgroundColor: '#f5f5f5',
+                                ':hover': {
+                                  backgroundColor: '#e1e4e7',
+                                },
+                                color: '#474747',
+                              }}
+                              onClick={handleCancel}
+                            >
+                              Cancel
+                            </Button>
+                          </Tooltip>
+                          <Tooltip title='Add task'>
+                            <Button
+                              variant='contained'
+                              sx={{
+                                padding: '5px 15px',
+                                fontSize: '11px',
+                                margin: '10px 15px',
+                                backgroundColor: '#eda59e',
+                                ':hover': {
+                                  backgroundColor: '#e40d0d',
+                                },
+                              }}
+                              onClick={handleSubmit}
+                            >
+                              Add task
+                            </Button>
+                          </Tooltip>
+                        </Grid>
+                      </Grid>
+                    </Accordion>
                   </Grid>
-                </Accordion>
+                </form>
               </Grid>
-            </form>
+            </Grid>
+            <Grid item xs={6}>
+              Bên phải
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
