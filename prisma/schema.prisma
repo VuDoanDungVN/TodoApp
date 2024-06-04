@@ -65,7 +65,6 @@ model User {
   posts               Post[]
   messages            Message[] // Các tin nhắn đã gửi hoặc nhận bởi người dùng
   conversation        Conversation[]
-  tasks               Task[]
 }
 
 model PersonalInformation {
@@ -169,8 +168,6 @@ model Task {
   description String?
   dueDate     DateTime?
   completed   Boolean   @default(false)
-  user        User      @relation(fields: [userId], references: [id])
-  userId      String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }

@@ -49,7 +49,7 @@ const handler = NextAuth({
   ],
   callbacks: {
     async jwt({ token, user, account }) {
-      console.log('token: ', token);
+      // console.log('token: ', token);
       // セッションの有効秒
       const SESSION_EXPIRES_SECOND = 60 * 60;
       // 秒までの現在時刻を UNIXTIME で取得する

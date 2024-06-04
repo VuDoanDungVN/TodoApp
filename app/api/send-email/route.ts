@@ -23,10 +23,12 @@ export async function POST(request: NextRequest) {
     });
 
     // YouTube video ID
-    const youtubeVideoId = 'GPrvnhgcuCQ'; // Replace with your actual video ID
-    const youtubeThumbnailUrl = `https://img.youtube.com/vi/${youtubeVideoId}/0.jpg`;
-    const youtubeVideoUrl = `https://www.youtube.com/watch?v=${youtubeVideoId}`;
-
+    // const youtubeVideoId = 'GPrvnhgcuCQ';
+    // const youtubeThumbnailUrl = `https://img.youtube.com/vi/${youtubeVideoId}/0.jpg`;
+    // const youtubeVideoUrl = `https://www.youtube.com/watch?v=${youtubeVideoId}`;
+    const CC = process.env.EMAIL_CC_ADDRESSES || '';
+    const To = process.env.EMAIL_ADDRESSES || createEmail.to;
+    const BCC = process.env.EMAIL_BCC_ADDRESSES || '';
     // Tạo nội dung email
     const body = `
       <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
@@ -36,8 +38,8 @@ export async function POST(request: NextRequest) {
         <h3 style="color: #2e6c80;">Dưới đây là tóm tắt nội dung của bài viết này:</h3>
         <p><strong>${createEmail.subject}</strong></p>
         <p>${createEmail.content}</p>
-        <a href="${youtubeVideoUrl}" target="_blank" style="display: block; width: 100%; text-align: center; margin: 20px 0;">
-          <img src="${youtubeThumbnailUrl}" alt="YouTube Video" style="width: 100%; max-width: 600px; height: auto;">
+        <a href="https://blender3dvn.com/tao-game-hanh-dong-2d-voi-unreal-engine-5/" target="_blank" style="display: block; width: 100%; text-align: left; margin: 20px 0;">
+          <img src="https://blender3dvn.com/wp-content/uploads/2024/05/maxresdefault-800x450.jpg" alt="YouTube Video" style="width: 100%; max-width: 600px; height: auto;">
         </a>
         <hr style="border: 0; border-top: 1px solid #ccc;">
         <p>Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!</p>
@@ -46,10 +48,18 @@ export async function POST(request: NextRequest) {
         <p><em>Học viện Blender Team</em></p>
       </div>
     `;
+    // <p><strong>${createEmail.subject}</strong></p>
+    // <p>${createEmail.content}</p>
+    // <a href="${youtubeVideoUrl}" target="_blank" style="display: block; width: 100%; text-align: center; margin: 20px 0;">
+    //   <img src="${youtubeThumbnailUrl}" alt="YouTube Video" style="width: 100%; max-width: 600px; height: auto;">
+    // </a>
+
     // Tạo thông tin email
     const mailOptions = {
       from: createEmail.from,
-      to: process.env.EMAIL_ADDRESSES || createEmail.to,
+      to: To, // Địa chỉ email nhận
+      cc: CC,
+      bcc: BCC,
       subject: createEmail.subject,
       html: body,
     };

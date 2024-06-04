@@ -16,12 +16,12 @@ const cssPaperCard = {
 export default function RecentPost() {
   return (
     <Box>
-      <Grid container xs={12}>
+      <Grid container>
         <Typography variant='h6'>Recent Post</Typography>
         <Grid item xs={12}>
           {/* This is a sample card, you can replace this with your own card */}
           <Paper sx={cssPaperCard} variant='outlined'>
-            <Grid container xs={12}>
+            <Grid container>
               <Grid item xs={3} style={{ display: 'flex', alignItems: 'center' }}>
                 <Image
                   src='/images/img/image-1.jpg'
@@ -35,7 +35,7 @@ export default function RecentPost() {
                 <Typography style={{ fontSize: 11 }}>
                   Mobile app design trends 2024, comprehensive collection.
                 </Typography>
-                <Grid container xs={12}>
+                <Grid container>
                   <Typography style={{ fontSize: 11 }}>Read more</Typography>
                   <ArrowRightAltIcon style={{ fontSize: 20 }} />
                 </Grid>

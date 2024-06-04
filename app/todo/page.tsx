@@ -5,13 +5,12 @@ import { TaskRepository } from '@/app/_repositories/Task';
 import { UserRepository } from '@/app/_repositories/User';
 export default async function TodoPages() {
   const tasks = await TaskRepository.findMany();
-  const users = await UserRepository.findMany();
   return (
     <>
       <Box>
-        <Grid container xs={12} spacing={2}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TodoList task={tasks} user={users} />
+            <TodoList task={tasks} />
           </Grid>
         </Grid>
       </Box>

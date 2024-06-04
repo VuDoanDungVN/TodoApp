@@ -16,12 +16,12 @@ const cssPaperCard = {
 export default function NewsPost() {
   return (
     <Box>
-      <Grid container xs={12}>
+      <Grid container>
         <Typography variant='h6'>News</Typography>
         <Grid item xs={12}>
           {/* This is a sample card, you can replace this with your own card */}
           <Paper sx={cssPaperCard} variant='outlined'>
-            <Grid container xs={12}>
+            <Grid container>
               <Grid item xs={3} style={{ display: 'flex', alignItems: 'center' }}>
                 <Image
                   src='/images/img/image-1.jpg'
@@ -35,7 +35,7 @@ export default function NewsPost() {
                 <Typography style={{ fontSize: 11 }}>
                   Mobile app design trends 2024, comprehensive collection.
                 </Typography>
-                <Grid container xs={12} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Grid container style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <Typography style={{ fontSize: 11 }}>Read more</Typography>
                   <ArrowRightAltIcon style={{ fontSize: 20 }} />
                 </Grid>
@@ -44,7 +44,7 @@ export default function NewsPost() {
           </Paper>
           {/* This is a sample card, you can replace this with your own card */}
           <Paper sx={cssPaperCard} variant='outlined'>
-            <Grid container xs={12}>
+            <Grid container>
               <Grid
                 item
                 xs={3}
@@ -62,7 +62,7 @@ export default function NewsPost() {
                 <Typography style={{ fontSize: 11 }}>
                   Mobile app design trends 2024, comprehensive collection.
                 </Typography>
-                <Grid container xs={12} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Grid container style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <Typography style={{ fontSize: 11 }}>Read more</Typography>
                   <ArrowRightAltIcon style={{ fontSize: 20 }} />
                 </Grid>
@@ -71,7 +71,7 @@ export default function NewsPost() {
           </Paper>
           {/* This is a sample card, you can replace this with your own card */}
           <Paper sx={cssPaperCard} variant='outlined'>
-            <Grid container xs={12}>
+            <Grid container>
               <Grid item xs={3} style={{ display: 'flex', alignItems: 'center' }}>
                 <Image
                   src='/images/img/image-3.jpg'
@@ -85,7 +85,7 @@ export default function NewsPost() {
                 <Typography style={{ fontSize: 11 }}>
                   Mobile app design trends 2024, comprehensive collection.
                 </Typography>
-                <Grid container xs={12} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Grid container style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <Typography style={{ fontSize: 11 }}>Read more</Typography>
                   <ArrowRightAltIcon style={{ fontSize: 20 }} />
                 </Grid>

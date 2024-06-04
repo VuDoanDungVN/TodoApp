@@ -27,7 +27,7 @@ export default function AddressList(props: Props) {
   return (
     <>
       <Box>
-        <Grid container xs={12} spacing={2}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
             <Grid
               item

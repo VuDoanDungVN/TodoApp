@@ -52,7 +52,7 @@ export default function TrendingPost(props: Props) {
             {posts.map((post) => (
               <Grid item key={post.id}>
                 <Paper sx={cssPaperCard} variant='outlined' style={{ width: '240px' }}>
-                  <Grid container xs={12}>
+                  <Grid container>
                     <Grid
                       item
                       xs={12}
@@ -97,7 +97,7 @@ export default function TrendingPost(props: Props) {
                           <strong>{post.title}</strong>
                         </Typography>
                       </Link>
-                      <Grid container xs={12}>
+                      <Grid container>
                         <Grid item xs={6} style={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <Typography style={{ fontSize: 11 }}>
                             {'Ngày update : ' + post?.createdAt.toLocaleDateString('vi-VN')}

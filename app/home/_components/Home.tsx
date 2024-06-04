@@ -25,7 +25,7 @@ export default async function Home(props: Props) {
   const posts = await PostRepository.findMany();
   return (
     <Box>
-      <Grid container xs={12} spacing={2}>
+      <Grid container spacing={2}>
         {/* <Grid item xs={3}>
           <Grid item xs={12} style={{ borderRadius: 10, margin: 10, padding: 10 }}>
 

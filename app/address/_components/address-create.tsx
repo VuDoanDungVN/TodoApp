@@ -84,7 +84,7 @@ export default function AddressCreate(props: Props) {
       <Box>
         {/* Bước 7: Tạo form để nhập dữ liệu và bước 8 là tạo Api  */}
         <form onSubmit={handleSave}>
-          <Grid container xs={12} spacing={2}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography variant='h5'>Create Address</Typography>
             </Grid>

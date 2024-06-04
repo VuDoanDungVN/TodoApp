@@ -18,7 +18,7 @@ export default function ProfileMain(props: Props) {
 
   return (
     <Box style={{ height: 'auto' }}>
-      <Grid container xs={12} style={{ maxWidth: 'auto' }}>
+      <Grid container style={{ maxWidth: 'auto' }}>
         <Grid item xs={3}>
           <Button
             variant='outlined'

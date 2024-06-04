@@ -1,6 +1,16 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Typography, Grid, Button, TextField, Select, FormControl, Box } from '@mui/material';
+import {
+  Typography,
+  Grid,
+  Button,
+  TextField,
+  Select,
+  FormControl,
+  Box,
+  Alert,
+  IconButton,
+} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Accordion from '@mui/material/Accordion';
@@ -28,11 +38,11 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { Task } from '@/app/_repositories/Task';
-import { User } from '@/app/_repositories/User';
 import { useRouter } from 'next/navigation';
+import CheckIcon from '@mui/icons-material/Check';
+
 type Props = {
   task: Task[];
-  user: User[];
 };
 
 const Transition = React.forwardRef(function Transition(
@@ -48,93 +58,207 @@ export default function TodoList(props: Props) {
   const tasks = props.task;
   const router = useRouter();
   const [isHover, setIsHover] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const handleClickOpen = () => {
-    setOpenDialog(true);
+  // Hàm này sẽ lấy ra task cần sửa và hiển thị dialog
+  const [task, setTask] = useState({
+    id: '',
+    title: '',
+    description: '',
+    completed: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+
+  // State cho form chỉnh sửa
+  const [editTask, setEditTask] = useState({
+    id: '',
+    title: '',
+    description: '',
+    completed: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+
+  // Hàm này sẽ lấy ra task cần sửa và hiển thị dialog
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
+  // Hàm này sẽ lấy ra task cần sửa và hiển thị dialog
+  const handleEditTask = (taskId: string | null) => {
+    const selectedTask = tasks.find((task) => task.id === taskId);
+    if (selectedTask) {
+      setEditTask({
+        id: selectedTask.id,
+        title: selectedTask.title,
+        description: selectedTask.description || '',
+        completed: selectedTask.completed,
+        createdAt: selectedTask.createdAt,
+        updatedAt: selectedTask.updatedAt,
+      });
+      setSelectedTaskId(taskId);
+      handleClickOpenDialogTodoList();
+    }
   };
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const [isAccordionExpanded, setIsAccordionExpanded] = useState(true);
+
   const handleCancel = () => {
     setIsAccordionExpanded(false);
   };
+
   const handleOpenAccord = () => {
     setIsAccordionExpanded(true);
   };
 
+  const [openDialogTodoList, setOpenDialogTodoList] = useState(false);
+
+  const handleClickOpenDialogTodoList = () => {
+    setOpenDialogTodoList(true);
+  };
+
+  const handleCloseDialogTodoList = () => {
+    setOpenDialogTodoList(false);
+  };
+
+  const [alert, setAlert] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+
+  const [deleteDialog, setDeleteDialog] = useState(false);
+  const handleDeleteDialogOpen = () => {
+    setDeleteDialog(true);
+  };
+  const handleDeleteDialogClose = () => {
+    setDeleteDialog(false);
+  };
   const textStyles = {
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
     color: isHover ? '#e40d0d' : '#bdbdbd',
-    fontSize: '13px',
+    fontSize: '15px',
     transition: 'color 0.3s',
     cursor: 'pointer',
-    margin: '5px 0px',
+    margin: '15px 0px 15px 15px',
     backgroundColor: '#fff',
     width: '100%',
   };
 
-  const [users, setUsers] = useState(props.user);
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch('/api/users');
-        if (!response.ok) {
-          throw new Error('Failed to fetch users');
-        }
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    };
-
-    fetchUsers();
-  }, []);
-
-  const [task, setTask] = useState({
-    title: '',
-    description: '',
-    userId: '',
-  });
-
+  // Hàm này sẽ cập nhật task mới khi người dùng nhập dữ liệu vào input Create
   const handleChange = (e: any) => {
-    setTask({ ...task, [e.target.name]: e.target.value });
+    const updatedTask = {
+      ...task,
+      [e.target.name]: e.target.value,
+    };
+    setTask(updatedTask);
   };
 
+  // Hàm này sẽ cập nhật task mới khi người dùng nhập dữ liệu vào input Edit
+  const handleChangeEditTask = (e: any) => {
+    const updatedEditTask = {
+      ...editTask,
+      [e.target.name]: e.target.value,
+    };
+    setEditTask(updatedEditTask);
+  };
+  // Hàm này sẽ tạo ID duy nhất cho task mới không bị trùng với các task khác
+  const generateUniqueId = () => {
+    return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+  };
+  // Hàm này sẽ gửi request POST tạo task mới
   const handleSubmit = async () => {
-    const newTask = new FormData();
-    newTask.append('title', task.title);
-    newTask.append('description', task.description);
-    newTask.append('userId', task.userId);
+    // Kiểm tra xem task có rỗng không
+    if (!task.title.trim()) {
+      // Task rỗng, không tạo task
+      setAlert('Vui lòng nhập tiêu đề Task');
+      return;
+    }
+
+    const newTask = {
+      ...task,
+      id: generateUniqueId(), // Tạo ID duy nhất cho task mới
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
     try {
       const response = await fetch('/api/tasks', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(task),
+        body: JSON.stringify(newTask),
       });
 
       if (response.ok) {
-        router.refresh();
+        setAlert('Đã tạo Task thành công');
         router.push('/todo');
+        router.refresh();
+        // Đặt lại trạng thái task
+        setTask({
+          id: '',
+          title: '',
+          description: '',
+          completed: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
       } else {
-        console.error('Failed to create post');
+        console.error('Failed to create task');
       }
     } catch (error) {
-      console.error('Error creating post:', error);
+      console.error('Error creating task:', error);
     }
   };
-  const [expanded, setExpanded] = React.useState<string | false>('panel1');
+  const handleUpdateTask = async (taskId: string) => {
+    try {
+      const response = await fetch(`/api/task-edit/${taskId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(editTask),
+      });
+
+      if (response.ok) {
+        setAlert('Đã sửa Task thành công');
+        setSelectedTaskId(null);
+        handleCloseDialogTodoList();
+        router.push('/todo');
+        router.refresh();
+      } else {
+        console.error('Failed to update task');
+      }
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
+
+  const handleDeleteTask = async (id: string) => {
+    try {
+      const response = await fetch(`/api/task-delete/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+      }
+      setDeleteDialog(false);
+      setAlertMessage('Đã xóa Task');
+      setAlertMessage('');
+      router.push('/todo');
+      router.refresh();
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  const [expanded, setExpanded] = useState<string | false>('panel1');
 
   const handleChangeAccordion =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -152,8 +276,8 @@ export default function TodoList(props: Props) {
             <CheckCircleOutlineIcon style={{ fontSize: '13px' }} /> Today Task
           </Typography>
           <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'space-around' }}>
-            <Grid item xs={6}>
-              <Grid container spacing={0}>
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
                 {tasks && tasks.length > 0 ? (
                   tasks.map((task, index) => (
                     <Grid item xs={12} key={task.id}>
@@ -197,20 +321,6 @@ export default function TodoList(props: Props) {
                                     {task.description}
                                   </Typography>
                                 </Grid>
-                                <Grid item xs={6}>
-                                  <Typography
-                                    style={{
-                                      fontSize: '12px',
-                                      fontWeight: 600,
-                                      margin: '10px 0px',
-                                    }}
-                                  >
-                                    ID:
-                                  </Typography>
-                                  <Typography style={{ fontSize: '12px' }}>
-                                    {task.userId}
-                                  </Typography>
-                                </Grid>
                               </Grid>
                               <Grid container spacing={2}>
                                 <Grid item xs={6}>
@@ -252,6 +362,7 @@ export default function TodoList(props: Props) {
                                       padding: '5px 15px',
                                     }}
                                     color='primary'
+                                    onClick={() => handleEditTask(task.id)}
                                   >
                                     <EditIcon style={{ fontSize: '20px', margin: '0px 5px' }} />{' '}
                                     Edit
@@ -262,6 +373,10 @@ export default function TodoList(props: Props) {
                                       padding: '5px 15px',
                                     }}
                                     color='error'
+                                    onCanPlay={() => setSelectedTaskId(task.id)}
+                                    onClick={() => {
+                                      handleDeleteTask(task.id);
+                                    }}
                                   >
                                     <ClearIcon style={{ fontSize: '20px', margin: '0px 5px' }} />{' '}
                                     Delete
@@ -318,7 +433,7 @@ export default function TodoList(props: Props) {
                           }}
                           fullWidth
                           inputProps={{
-                            style: { fontSize: '12px' }, // change this to the desired font size
+                            style: { fontSize: '15px' }, // change this to the desired font size
                           }}
                         />
                       </AccordionDetails>
@@ -337,28 +452,9 @@ export default function TodoList(props: Props) {
                           }}
                           fullWidth
                           inputProps={{
-                            style: { fontSize: '12px' }, // change this to the desired font size
+                            style: { fontSize: '15px' }, // change this to the desired font size
                           }}
                         />
-                      </AccordionDetails>
-                      <AccordionDetails>
-                        <FormControl style={{ width: '100%' }}>
-                          <Typography style={{ fontSize: '13px', margin: '10px 0px' }}>
-                            Assign to:
-                          </Typography>
-                          <Select
-                            name='userId'
-                            value={task.userId}
-                            onChange={handleChange}
-                            fullWidth
-                          >
-                            {users?.map((user) => (
-                              <MenuItem key={user.id} value={user.id}>
-                                {user.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
                       </AccordionDetails>
                       <AccordionDetails
                         style={{
@@ -438,9 +534,7 @@ export default function TodoList(props: Props) {
                           >
                             Reminders
                           </Typography>
-                          <Button variant='text' style={{ padding: '2px 10px', fontSize: '11px' }}>
-                            Upgrade
-                          </Button>
+                          <span style={{ padding: '2px 10px', fontSize: '11px' }}>Upgrade</span>
                         </Button>
                         <Tooltip title='More Actions'>
                           <Button
@@ -501,7 +595,7 @@ export default function TodoList(props: Props) {
                         </Menu>
                       </AccordionDetails>
                       <Divider />
-                      <Grid container xs={12}>
+                      <Grid container>
                         <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
                           <Tooltip title='Cancel'>
                             <Button
@@ -545,10 +639,246 @@ export default function TodoList(props: Props) {
                 </form>
               </Grid>
             </Grid>
-            <Grid item xs={6}>
-              Bên phải
-            </Grid>
           </Grid>
+          {/* Dialog */}
+          <Dialog
+            open={openDialogTodoList}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={handleCloseDialogTodoList}
+            aria-describedby='alert-dialog-slide-description'
+          >
+            <Grid item xs={12} style={textStyles}>
+              <Accordion style={{ width: '100%' }} expanded={isAccordionExpanded}>
+                <AccordionSummary
+                  aria-controls='panel1-content'
+                  id='panel1-header'
+                  onClick={handleOpenAccord}
+                  sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}
+                >
+                  <AddIcon style={{ color: '#e40d0d', margin: '0px 5px' }} />
+                  <Typography
+                    style={{
+                      fontSize: '12px',
+                      display: 'flex',
+                      justifyContent: 'flex-start',
+                      alignItems: 'center',
+                    }}
+                  >
+                    Add task
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TextField
+                    id='standard-basic'
+                    placeholder='Add task...'
+                    variant='standard'
+                    name='title'
+                    value={editTask.title}
+                    onChange={handleChangeEditTask}
+                    sx={{
+                      '& fieldset': { border: '0.5px solid #e1e4e7' },
+                      outline: 'none',
+                      padding: '5px 0px',
+                    }}
+                    fullWidth
+                    inputProps={{
+                      style: { fontSize: '12px' }, // change this to the desired font size
+                    }}
+                  />
+                </AccordionDetails>
+                <AccordionDetails>
+                  <TextField
+                    id='standard-basic'
+                    placeholder='Description...'
+                    variant='standard'
+                    name='description'
+                    value={editTask.description}
+                    onChange={handleChangeEditTask}
+                    sx={{
+                      '& fieldset': { border: '0.5px solid #e1e4e7' },
+                      outline: 'none',
+                      padding: '5px 0px',
+                    }}
+                    fullWidth
+                    inputProps={{
+                      style: { fontSize: '12px' }, // change this to the desired font size
+                    }}
+                  />
+                </AccordionDetails>
+                <AccordionDetails
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    gap: '10px',
+                  }}
+                >
+                  <Button
+                    variant='outlined'
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-around',
+                      alignContent: 'center',
+                      color: '#3d893b',
+                      fontSize: '11px',
+                      alignItems: 'center',
+                      padding: '5px 15px',
+                    }}
+                  >
+                    <SubtitlesIcon style={{ fontSize: '20px', marginRight: '10px' }} />
+                    <Typography
+                      style={{
+                        fontSize: '11px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignContent: 'center',
+                      }}
+                    >
+                      Today
+                    </Typography>
+                    <ClearIcon style={{ fontSize: '15px', marginLeft: '10px' }} />
+                  </Button>
+                  <Button
+                    variant='outlined'
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-around',
+                      alignContent: 'center',
+                      fontSize: '11px',
+                      alignItems: 'center',
+                      padding: '5px 10px',
+                    }}
+                  >
+                    <AssistantPhotoIcon style={{ fontSize: '20px', marginRight: '10px' }} />
+                    <Typography
+                      style={{
+                        fontSize: '11px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignContent: 'center',
+                      }}
+                    >
+                      Priority
+                    </Typography>
+                  </Button>
+                  <Button
+                    variant='outlined'
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-around',
+                      alignContent: 'center',
+                      color: '#3d893b',
+                      fontSize: '11px',
+                      alignItems: 'center',
+                      padding: '5px 15px',
+                    }}
+                  >
+                    <AccessAlarmIcon style={{ fontSize: '20px', marginRight: '10px' }} />
+                    <Typography
+                      style={{
+                        fontSize: '11px',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignContent: 'center',
+                      }}
+                    >
+                      Reminders
+                    </Typography>
+                    <span style={{ padding: '2px 10px', fontSize: '11px' }}>Upgrade</span>
+                  </Button>
+                  <Tooltip title='More Actions'>
+                    <Button
+                      variant='outlined'
+                      onClick={handleClick}
+                      size='small'
+                      sx={{ color: '#93a2b9' }}
+                      aria-controls={open ? 'account-menu' : undefined}
+                      aria-haspopup='true'
+                      aria-expanded={open ? 'true' : undefined}
+                    >
+                      <MoreHorizIcon />
+                    </Button>
+                  </Tooltip>
+                  <Menu
+                    anchorEl={anchorEl}
+                    id='account-menu'
+                    open={open}
+                    onClose={handleClose}
+                    onClick={handleClose}
+                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                    style={{ marginTop: '5px', width: '250px' }}
+                  >
+                    <MenuItem onClick={handleClose} style={{ width: '250px', fontSize: '13px' }}>
+                      <ListItemIcon>
+                        <LabelIcon fontSize='small' />
+                      </ListItemIcon>
+                      Labels
+                    </MenuItem>
+                    <MenuItem onClick={handleClose} style={{ width: '250px', fontSize: '13px' }}>
+                      <ListItemIcon>
+                        <FmdGoodOutlinedIcon fontSize='small' />
+                      </ListItemIcon>
+                      Location
+                    </MenuItem>
+                    <MenuItem onClick={handleClose} style={{ width: '250px', fontSize: '13px' }}>
+                      <ListItemIcon>
+                        <ExtensionIcon fontSize='small' />
+                      </ListItemIcon>
+                      Logout
+                    </MenuItem>
+                    <MenuItem onClick={handleClose} style={{ width: '250px', fontSize: '13px' }}>
+                      Edit task actions
+                    </MenuItem>
+                  </Menu>
+                </AccordionDetails>
+                <Divider />
+                <Grid container>
+                  <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Tooltip title='Cancel'>
+                      <Button
+                        variant='text'
+                        sx={{
+                          padding: '5px 15px',
+                          fontSize: '11px',
+                          margin: '10px 0px',
+                          backgroundColor: '#f5f5f5',
+                          ':hover': {
+                            backgroundColor: '#e1e4e7',
+                          },
+                          color: '#474747',
+                        }}
+                        onClick={handleCloseDialogTodoList}
+                      >
+                        Cancel
+                      </Button>
+                    </Tooltip>
+                    <Tooltip title='Add task'>
+                      <Button
+                        variant='contained'
+                        sx={{
+                          padding: '5px 15px',
+                          fontSize: '11px',
+                          margin: '10px 15px',
+                          backgroundColor: '#eda59e',
+                          ':hover': {
+                            backgroundColor: '#e40d0d',
+                          },
+                        }}
+                        onClick={() =>
+                          selectedTaskId ? handleUpdateTask(selectedTaskId) : handleSubmit()
+                        }
+                      >
+                        Add task
+                      </Button>
+                    </Tooltip>
+                  </Grid>
+                </Grid>
+              </Accordion>
+            </Grid>
+          </Dialog>
+          {alert && <Alert severity='success'>Đã sửa Task thành công</Alert>}
+          {alertMessage && <Alert severity='success'>Đã xóa Task</Alert>}
         </Grid>
       </Grid>
     </div>

@@ -9,9 +9,6 @@ export namespace TaskRepository {
       orderBy: {
         createdAt: 'desc',
       },
-      include: {
-        user: true,
-      },
     });
   }
 
@@ -32,15 +29,13 @@ export namespace TaskRepository {
   }
 
   export async function update(id: string, task: Task) {
+    const { updatedAt, ...taskWithoutUpdatedAt } = task;
     return await prisma.task.update({
       where: {
         id: id,
+        updatedAt: updatedAt,
       },
-      data: {
-        title: task.title,
-        description: task.description,
-        userId: task.userId,
-      },
+      data: taskWithoutUpdatedAt,
     });
   }
 

@@ -22,6 +22,7 @@ type Props = {
 };
 
 export default function CreatePost({ user, post }: Props) {
+  const users = user;
   const router = useRouter();
   const [formData, setFormData] = useState({
     title: '',
@@ -31,7 +32,6 @@ export default function CreatePost({ user, post }: Props) {
     slug: '',
     thumbnail: null as unknown as File | string,
   });
-  const [users, setUsers] = useState(user);
 
   useEffect(() => {
     if (post) {
